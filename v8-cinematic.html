@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ahteemu — Teemu Ahtee</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+/* ── Reset & Base ── */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #0a0a0a;
+  --white: #f0f0f0;
+  --muted: #888;
+  --red: #CC3444;
+}
+
+html {
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+}
+
+body {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 300;
+  color: var(--white);
+  background: var(--bg);
+  line-height: 1.8;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background: var(--red);
+  color: #fff;
+}
+
+/* ── Sections ── */
+.section {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  scroll-snap-align: start;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+/* ── Full-bleed background images ── */
+.section-bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  filter: brightness(0.5);
+  z-index: 0;
+  transition: filter 1.2s ease;
+}
+
+/* ── Content wrapper ── */
+.section-content {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 600px;
+  padding: 2rem;
+}
+
+/* ── Frosted glass panel ── */
+.glass-panel {
+  background: rgba(10, 10, 10, 0.65);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 3rem;
+  max-width: 560px;
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.glass-panel.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Typography ── */
+h2 {
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  font-size: clamp(2.8rem, 5vw, 4.5rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin-bottom: 1.5rem;
+  color: #fff;
+}
+
+.section-text {
+  font-size: clamp(0.88rem, 1vw, 1rem);
+  line-height: 1.9;
+  color: rgba(240, 240, 240, 0.75);
+  margin-bottom: 2rem;
+}
+
+/* ── Heading word animation ── */
+.heading-word {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(24px);
+  transition: none;
+}
+
+.heading-word.animate {
+  animation: wordReveal 0.6s ease forwards;
+}
+
+@keyframes wordReveal {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── Red line divider ── */
+.red-line {
+  width: 0;
+  height: 1px;
+  background: var(--red);
+  transition: width 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  margin: 1.5rem 0;
+}
+
+.red-line.visible {
+  width: 80px;
+}
+
+/* ── Stats ── */
+.stat {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.stat-number {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2.5rem, 4vw, 3.5rem);
+  font-weight: 700;
+  color: var(--red);
+  text-shadow: 0 0 40px rgba(204, 52, 68, 0.4);
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 0.85rem;
+  color: var(--muted);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* ══════════════════════════════════
+   SECTION 1 — LOGO
+   ══════════════════════════════════ */
+#logo-section {
+  background: var(--bg);
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.logo-hero {
+  width: clamp(200px, 30vw, 340px);
+  filter: brightness(0) invert(1);
+  animation: logoPulse 4s ease-in-out infinite alternate;
+}
+
+@keyframes logoPulse {
+  0% { filter: brightness(0) invert(1) drop-shadow(0 0 20px rgba(255,255,255,0.05)); }
+  100% { filter: brightness(0) invert(1) drop-shadow(0 0 60px rgba(255,255,255,0.15)); }
+}
+
+.scroll-hint {
+  position: absolute;
+  bottom: 3rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  opacity: 0;
+  animation: hintFadeIn 1s ease forwards 2.5s;
+}
+
+.scroll-hint span {
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.scroll-hint-arrow {
+  width: 1px;
+  height: 30px;
+  background: linear-gradient(to bottom, var(--muted), transparent);
+  animation: arrowBounce 2s ease infinite 3s;
+}
+
+@keyframes hintFadeIn {
+  to { opacity: 1; }
+}
+
+@keyframes arrowBounce {
+  0%, 100% { transform: translateY(0); opacity: 0.5; }
+  50% { transform: translateY(8px); opacity: 1; }
+}
+
+/* ══════════════════════════════════
+   SECTIONS 2-4 — IMAGE SECTIONS
+   ══════════════════════════════════ */
+#juontaja { justify-content: flex-start; align-items: flex-end; }
+#juontaja .section-content { padding-bottom: 5vh; padding-left: 5vw; }
+
+#ilmailu { justify-content: flex-end; align-items: flex-end; }
+#ilmailu .section-content { padding-bottom: 5vh; padding-right: 5vw; }
+
+#hevoset { justify-content: center; align-items: center; }
+
+/* ══════════════════════════════════
+   SECTION 5 — REFERENSSIT
+   ══════════════════════════════════ */
+#referenssit {
+  background: var(--bg);
+  align-items: center;
+  justify-content: center;
+  padding: 6rem 2rem;
+  min-height: 100vh;
+}
+
+#referenssit .section-content {
+  max-width: 600px;
+}
+
+.ref-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.ref-item {
+  position: relative;
+  padding-left: 1.5rem;
+  border-left: 2px solid var(--red);
+  opacity: 0;
+  transform: translateX(-20px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.ref-item.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.ref-item h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1rem, 1.2vw, 1.2rem);
+  font-weight: 600;
+  margin-bottom: 0.4rem;
+  color: #fff;
+}
+
+.ref-item p {
+  font-size: clamp(0.78rem, 0.85vw, 0.88rem);
+  line-height: 1.75;
+  color: rgba(240, 240, 240, 0.55);
+}
+
+/* ══════════════════════════════════
+   SECTION 6 — KUMPPANIT
+   ══════════════════════════════════ */
+#kumppanit {
+  background: var(--bg);
+  flex-direction: column;
+  gap: 3rem;
+  padding: 4rem 2rem;
+}
+
+#kumppanit .section-content {
+  text-align: center;
+}
+
+.partner-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3rem;
+  flex-wrap: wrap;
+  margin-top: 2.5rem;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.partner-row.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.partner-row a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.partner-row a:hover {
+  opacity: 0.7;
+  transform: scale(1.05);
+}
+
+.partner-row img {
+  max-width: 140px;
+  max-height: 60px;
+  width: 100%;
+  object-fit: contain;
+  filter: brightness(0) invert(1);
+  opacity: 0.6;
+  transition: opacity 0.3s ease;
+}
+
+.partner-row a:hover img {
+  opacity: 1;
+}
+
+/* ══════════════════════════════════
+   SECTION 7 — FOOTER
+   ══════════════════════════════════ */
+#footer-section {
+  background: var(--bg);
+  flex-direction: column;
+  gap: 2rem;
+  min-height: 50vh;
+}
+
+.footer-logo {
+  width: 120px;
+  filter: brightness(0) invert(1);
+  animation: logoPulse 4s ease-in-out infinite alternate;
+  opacity: 0.7;
+}
+
+.social-links {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.social-links a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.12);
+  transition: border-color 0.3s ease, transform 0.3s ease;
+}
+
+.social-links a:hover {
+  border-color: var(--red);
+  transform: scale(1.1);
+}
+
+.social-links svg {
+  width: 16px;
+  height: 16px;
+  fill: var(--white);
+  opacity: 0.6;
+  transition: opacity 0.3s ease;
+}
+
+.social-links a:hover svg {
+  opacity: 1;
+}
+
+.footer-text {
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 1rem;
+}
+
+/* ══════════════════════════════════
+   NAV DOTS
+   ══════════════════════════════════ */
+.nav-dots {
+  position: fixed;
+  right: 1.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  z-index: 100;
+  background: rgba(10,10,10,0.4);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 20px;
+  padding: 12px 8px;
+  border: 1px solid rgba(255,255,255,0.04);
+  opacity: 0.3;
+  transition: opacity 0.4s ease;
+}
+
+.nav-dots:hover {
+  opacity: 1;
+}
+
+.nav-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.2);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.nav-dot:hover {
+  background: rgba(255,255,255,0.5);
+  transform: scale(1.4);
+}
+
+.nav-dot.active {
+  background: var(--red);
+  box-shadow: 0 0 8px rgba(204,52,68,0.5);
+}
+
+.nav-dot__label {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.nav-dots:hover .nav-dot:hover .nav-dot__label {
+  opacity: 1;
+}
+
+/* ══════════════════════════════════
+   RESPONSIVE
+   ══════════════════════════════════ */
+@media (max-width: 768px) {
+  .glass-panel {
+    padding: 2rem 1.5rem;
+    max-width: 100%;
+    border-radius: 12px;
+  }
+
+  #juontaja,
+  #ilmailu {
+    justify-content: center;
+    align-items: flex-end;
+  }
+
+  #juontaja .section-content,
+  #ilmailu .section-content {
+    padding: 2rem;
+    padding-bottom: 4vh;
+  }
+
+  h2 {
+    font-size: clamp(2rem, 8vw, 3rem);
+  }
+
+  .stat-number {
+    font-size: clamp(2rem, 6vw, 2.5rem);
+  }
+
+  .partner-row {
+    gap: 2rem;
+  }
+
+  .partner-row img {
+    max-width: 100px;
+    max-height: 45px;
+  }
+
+  .nav-dots {
+    right: 0.75rem;
+    padding: 8px 6px;
+    gap: 10px;
+  }
+
+  .nav-dot {
+    width: 6px;
+    height: 6px;
+  }
+
+  .nav-dot__label {
+    display: none;
+  }
+
+  .ref-item p {
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .glass-panel {
+    padding: 1.5rem 1.25rem;
+  }
+
+  .section-content {
+    padding: 1.25rem;
+  }
+
+  h2 {
+    font-size: clamp(1.8rem, 7vw, 2.5rem);
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ NAV DOTS ═══ -->
+<nav class="nav-dots">
+  <div class="nav-dot active" data-index="0"><span class="nav-dot__label">Alku</span></div>
+  <div class="nav-dot" data-index="1"><span class="nav-dot__label">Juontaja</span></div>
+  <div class="nav-dot" data-index="2"><span class="nav-dot__label">Ilmailu</span></div>
+  <div class="nav-dot" data-index="3"><span class="nav-dot__label">Hevoset</span></div>
+  <div class="nav-dot" data-index="4"><span class="nav-dot__label">Referenssit</span></div>
+  <div class="nav-dot" data-index="5"><span class="nav-dot__label">Kumppanit & Yhteystiedot</span></div>
+</nav>
+
+<!-- ═══ SECTION 1: LOGO ═══ -->
+<section class="section" id="logo-section">
+  <img class="logo-hero" src="https://www.ahteemu.fi/wp-content/uploads/2024/03/ahteemu-logo-black.png" alt="Ahteemu">
+  <div class="scroll-hint">
+    <span>Selaa</span>
+    <div class="scroll-hint-arrow"></div>
+  </div>
+</section>
+
+<!-- ═══ SECTION 2: JUONTAJA ═══ -->
+<section class="section" id="juontaja">
+  <div class="section-bg" style="background-image: url('https://www.ahteemu.fi/wp-content/uploads/2024/04/ahteemu-bg-1920x1080px-juontaja.jpg');"></div>
+  <div class="section-content">
+    <div class="glass-panel">
+      <h2 data-animate-words>Juontaja</h2>
+      <div class="red-line"></div>
+      <p class="section-text">Laita käteeni mikrofoni, eteeni yleisö, olen kotonani. Vuosien varrella olen saanut juontaa tapahtumia seminaareista burleski-iltamiin, Olympiastadionilta TV-studioon, Helsingistä Ouluun, suomeksi ja englanniksi, myös på svenska.</p>
+      <div class="stat">
+        <span class="stat-number" data-count="100">0</span><span class="stat-number" style="font-size: inherit; text-shadow: none;">+</span>
+        <span class="stat-label">tapahtumaa juonnettu</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SECTION 3: ILMAILU ═══ -->
+<section class="section" id="ilmailu">
+  <div class="section-bg" style="background-image: url('https://www.ahteemu.fi/wp-content/uploads/2024/04/ahteemu-bg-1920x1080px-ilmailu.jpg');"></div>
+  <div class="section-content">
+    <div class="glass-panel">
+      <h2 data-animate-words>Ilmailu</h2>
+      <div class="red-line"></div>
+      <p class="section-text">Lapsuuden haaveesta tuli totta ja pääsin unelma-ammattiini lentäjäksi. 25 vuoden ja yli 12&nbsp;000 lentotunnin jälkeen on se sama pikkupoikamainen innostus tallella. Samalla maailma on pienentynyt. Tyynenmeren molemmat rannat, Pohjoisnapa, Grönlanti, Siperia, Gobin autiomaa.</p>
+      <div class="stat">
+        <span class="stat-number" data-count="12000">0</span><span class="stat-number" style="font-size: inherit; text-shadow: none;">+</span>
+        <span class="stat-label">lentotuntia</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SECTION 4: HEVOSET ═══ -->
+<section class="section" id="hevoset">
+  <div class="section-bg" style="background-image: url('https://www.ahteemu.fi/wp-content/uploads/2024/04/ahteemu-bg-1920x1080px-hevoset.jpg');"></div>
+  <div class="section-content">
+    <div class="glass-panel">
+      <h2 data-animate-words>Hevoset</h2>
+      <div class="red-line"></div>
+      <p class="section-text">Hevosen lempeä katse, turvan pehmeä iho, tuttu hörähdys karsinasta. Tunne, jonka saa ollessaan hevosen kanssa, on sellainen, johon ei ikinä kyllästy.</p>
+      <p class="section-text" style="margin-bottom: 0;">Valmentaessani olen vaativa, mutta kannustava. Tarkka, mutta lempeä. Tosissani, mutten tosikkona.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SECTION 5: REFERENSSIT ═══ -->
+<section class="section" id="referenssit">
+  <div class="section-content">
+    <h2 data-animate-words style="text-align: center;">Referenssit</h2>
+    <div class="red-line" style="margin-left: auto; margin-right: auto;"></div>
+    <div class="ref-list">
+      <div class="ref-item">
+        <h3>Helsinki International Horse Show</h3>
+        <p>Suomen suurin ratsastustapahtuma. Vuosittain yli 50&nbsp;000 ratsastuksen ystävää täyttää Helsingin Jäähallin katsomot. Show-ohjelmien juontaminen on ollut jo useamman vuoden ajan vastuullani.</p>
+      </div>
+      <div class="ref-item">
+        <h3>&ldquo;Cityravit&rdquo;</h3>
+        <p>Suomen Hippos ja Suomen Ratsastajainliitto ovat yhdessä useampana vuonna järjestäneet tapahtuman, jossa hevosurheilu viedään kaupunkien keskustoihin. Hevoset Stadikalla 2013 &middot; Kaivarissa 2017 &middot; Lumiravit 2018 &middot; Bastionissa 2022&ndash;2023</p>
+      </div>
+      <div class="ref-item">
+        <h3>Hevoset-messut</h3>
+        <p>Tampereella järjestettävät hevosharrastajille ja alan ammattilaisille suunnatut messut, joiden esityksien ja paneeleiden juontamisesta olen vastannut useamman vuoden ajan.</p>
+      </div>
+      <div class="ref-item">
+        <h3>Kaviionjälkiä <span style="font-family:'Montserrat',sans-serif;font-weight:300;font-size:0.8em;color:#888;">(Yle Areena, TV2)</span></h3>
+        <p>Olen saanut tehdä Ylelle Kuninkuusraveista lähetettävän TV-ohjelman studio-osuudet sekä Brodifyn että Constra Groupin tuotannoissa.</p>
+      </div>
+      <div class="ref-item">
+        <h3>Kavioliitossa-podcast</h3>
+        <p>Katja Stählin kanssa toteutettu podcast-sarja. Puhutaan hevosista, hevosihmisistä, sekä aivan kaikesta muusta. Sarjan motto: &ldquo;Asiaa vain siteeksi&rdquo;.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SECTION 6: KUMPPANIT + FOOTER ═══ -->
+<section class="section" id="kumppanit" style="flex-direction: column; gap: 0; padding: 5vh 2rem;">
+  <div style="text-align: center; flex: 0 0 auto;">
+    <h2 data-animate-words>Yhteistyökumppanit</h2>
+    <div class="red-line" style="margin-left: auto; margin-right: auto;"></div>
+    <div class="partner-row">
+      <a href="https://backontrack.fi/" target="_blank" rel="noopener">
+        <img src="https://www.ahteemu.fi/wp-content/uploads/2024/04/Back-on-Track-logo-3.png" alt="Back on Track">
+      </a>
+      <a href="https://houseofhorseshelsinki.com/fi" target="_blank" rel="noopener">
+        <img src="https://www.ahteemu.fi/wp-content/uploads/2024/04/HHH-logo.png" alt="House of Horses Helsinki">
+      </a>
+      <a href="https://dogtrail.fi/" target="_blank" rel="noopener">
+        <img src="https://www.ahteemu.fi/wp-content/uploads/2024/05/dogtrail-logo-458px.png" alt="Dog Trail">
+      </a>
+      <a href="https://happydog.fi/" target="_blank" rel="noopener">
+        <img src="https://www.ahteemu.fi/wp-content/uploads/2024/05/happydog-logo-458px.jpg" alt="Happy Dog">
+      </a>
+    </div>
+  </div>
+  <!-- Divider -->
+  <div style="width: 40px; height: 1px; background: rgba(255,255,255,0.1); margin: 5rem auto; flex: 0 0 auto;"></div>
+  <!-- Footer area -->
+  <div style="text-align: center; display: flex; flex-direction: column; align-items: center; gap: 1.2rem; flex: 0 0 auto; opacity: 0; transform: translateY(20px); transition: opacity 0.8s ease 0.5s, transform 0.8s ease 0.5s;" class="footer-area">
+    <img class="footer-logo" src="https://www.ahteemu.fi/wp-content/uploads/2024/03/ahteemu-logo-black.png" alt="Ahteemu" style="filter: brightness(0) invert(1);">
+    <div class="social-links">
+      <a href="https://facebook.com/ahteemu/" target="_blank" rel="noopener" aria-label="Facebook">
+        <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+      </a>
+      <a href="https://instagram.com/ahteemu/" target="_blank" rel="noopener" aria-label="Instagram">
+        <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+      </a>
+      <a href="https://x.com/ahteemu" target="_blank" rel="noopener" aria-label="X">
+        <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+      </a>
+    </div>
+    <p class="footer-text">T:mi Ahteemu</p>
+  </div>
+</section>
+
+<script>
+(function() {
+  'use strict';
+
+  const sections = document.querySelectorAll('.section');
+  const navDots = document.querySelectorAll('.nav-dot');
+  let currentIndex = 0;
+  let isScrolling = false;
+
+  // ── IntersectionObserver for all reveal animations ──
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+
+      const section = entry.target;
+
+      // Glass panels
+      section.querySelectorAll('.glass-panel').forEach(panel => {
+        setTimeout(() => panel.classList.add('visible'), 200);
+      });
+
+      // Red lines
+      section.querySelectorAll('.red-line').forEach(line => {
+        setTimeout(() => line.classList.add('visible'), 600);
+      });
+
+      // Heading word animation
+      section.querySelectorAll('[data-animate-words]').forEach(heading => {
+        if (heading.dataset.animated) return;
+        heading.dataset.animated = 'true';
+        const text = heading.textContent;
+        const words = text.split(/\s+/);
+        heading.innerHTML = '';
+        words.forEach((word, i) => {
+          const span = document.createElement('span');
+          span.className = 'heading-word';
+          span.textContent = word;
+          span.style.animationDelay = (i * 0.12) + 's';
+          heading.appendChild(span);
+          if (i < words.length - 1) {
+            heading.appendChild(document.createTextNode(' '));
+          }
+        });
+        // Trigger animation
+        requestAnimationFrame(() => {
+          heading.querySelectorAll('.heading-word').forEach(w => w.classList.add('animate'));
+        });
+      });
+
+      // Reference items stagger
+      section.querySelectorAll('.ref-item').forEach((item, i) => {
+        setTimeout(() => item.classList.add('visible'), 300 + i * 150);
+      });
+
+      // Partner row
+      section.querySelectorAll('.partner-row').forEach(row => {
+        setTimeout(() => row.classList.add('visible'), 400);
+      });
+
+      // Footer area in kumppanit section
+      section.querySelectorAll('.footer-area').forEach(el => {
+        setTimeout(() => { el.style.opacity = '1'; el.style.transform = 'translateY(0)'; }, 600);
+      });
+
+      // Animated counters
+      section.querySelectorAll('[data-count]').forEach(el => {
+        if (el.dataset.counted) return;
+        el.dataset.counted = 'true';
+        const target = parseInt(el.dataset.count);
+        const duration = 2000;
+        const start = performance.now();
+
+        function formatNumber(n) {
+          return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+        }
+
+        function tick(now) {
+          const elapsed = now - start;
+          const progress = Math.min(elapsed / duration, 1);
+          const eased = 1 - Math.pow(1 - progress, 3);
+          const current = Math.round(eased * target);
+          el.textContent = formatNumber(current);
+          if (progress < 1) requestAnimationFrame(tick);
+        }
+        setTimeout(() => requestAnimationFrame(tick), 800);
+      });
+    });
+  }, { threshold: 0.3 });
+
+  sections.forEach(section => observer.observe(section));
+
+  // ── Update nav dots ──
+  function updateNavDots(index) {
+    navDots.forEach(dot => dot.classList.remove('active'));
+    if (navDots[index]) navDots[index].classList.add('active');
+    currentIndex = index;
+  }
+
+  // ── Scroll-based section tracking ──
+  const sectionObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const idx = Array.from(sections).indexOf(entry.target);
+        if (idx !== -1) updateNavDots(idx);
+      }
+    });
+  }, { threshold: 0.5 });
+
+  sections.forEach(section => sectionObserver.observe(section));
+
+  // ── Nav dot clicks ──
+  navDots.forEach(dot => {
+    dot.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const idx = parseInt(dot.dataset.index);
+      sections[idx].scrollIntoView({ behavior: 'smooth' });
+    });
+  });
+
+  // ── Click to advance ──
+  document.addEventListener('click', (e) => {
+    if (e.target.closest('.nav-dots') || e.target.closest('a')) return;
+    const next = Math.min(currentIndex + 1, sections.length - 1);
+    if (next !== currentIndex) {
+      sections[next].scrollIntoView({ behavior: 'smooth' });
+    }
+  });
+
+  // ── Keyboard navigation ──
+  document.addEventListener('keydown', (e) => {
+    let next = currentIndex;
+    if (e.key === 'ArrowDown' || e.key === ' ' || e.key === 'PageDown') {
+      e.preventDefault();
+      next = Math.min(currentIndex + 1, sections.length - 1);
+    } else if (e.key === 'ArrowUp' || e.key === 'PageUp') {
+      e.preventDefault();
+      next = Math.max(currentIndex - 1, 0);
+    } else if (e.key === 'Home') {
+      e.preventDefault();
+      next = 0;
+    } else if (e.key === 'End') {
+      e.preventDefault();
+      next = sections.length - 1;
+    }
+    if (next !== currentIndex) {
+      sections[next].scrollIntoView({ behavior: 'smooth' });
+    }
+  });
+
+})();
+</script>
+</body>
+</html>

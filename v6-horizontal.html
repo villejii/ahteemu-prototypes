@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ahteemu — Teemu Ahtee</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --red: #CC3444;
+  --dark: #1f1f1f;
+  --cream: #f5f2ed;
+  --panel-count: 7;
+}
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 300;
+  color: var(--dark);
+  background: var(--cream);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Horizontal scroll container ── */
+.scroll-container {
+  display: flex;
+  height: 100vh;
+  height: 100dvh;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.scroll-container::-webkit-scrollbar {
+  display: none;
+}
+
+/* ── Panel base ── */
+.panel {
+  flex: 0 0 100vw;
+  width: 100vw;
+  height: 100vh;
+  scroll-snap-align: start;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  cursor: e-resize;
+}
+.panel:last-child {
+  cursor: default;
+}
+
+/* Vertical fold line */
+.panel::after {
+  content: '';
+  position: absolute;
+  top: 10%;
+  right: 0;
+  width: 1px;
+  height: 80%;
+  background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.08) 20%, rgba(0,0,0,0.12) 50%, rgba(0,0,0,0.08) 80%, transparent);
+  z-index: 2;
+  pointer-events: none;
+}
+.panel:last-child::after {
+  display: none;
+}
+.panel.dark::after {
+  background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.06) 20%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.06) 80%, transparent);
+}
+
+/* ── Light & dark panels ── */
+.panel.light {
+  background: var(--cream);
+  color: var(--dark);
+}
+.panel.dark {
+  background: var(--dark);
+  color: #fff;
+}
+.panel.dark .bg-image {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  filter: brightness(0.25);
+  z-index: 0;
+}
+.panel .content {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  padding: 0 8vw;
+}
+
+/* ── Reveal animation ── */
+.reveal-element {
+  opacity: 0;
+  transform: translateX(60px);
+  transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.reveal-element.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+.reveal-element:nth-child(2) { transition-delay: 0.12s; }
+.reveal-element:nth-child(3) { transition-delay: 0.24s; }
+.reveal-element:nth-child(4) { transition-delay: 0.36s; }
+
+/* ── Typography ── */
+h1, h2, h3 {
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  line-height: 1.1;
+}
+h2 {
+  font-size: clamp(2.2rem, 4vw, 3.8rem);
+  margin-bottom: 1.5rem;
+}
+h3 {
+  font-size: clamp(1.3rem, 2vw, 1.8rem);
+  margin-bottom: 1rem;
+}
+p {
+  font-size: clamp(0.95rem, 1.1vw, 1.15rem);
+  line-height: 1.75;
+  max-width: 540px;
+}
+.accent {
+  color: var(--red);
+}
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* ── Stat numbers ── */
+.stat {
+  text-align: center;
+}
+.stat-number {
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  font-size: clamp(4rem, 8vw, 8rem);
+  line-height: 1;
+  color: var(--red);
+  margin-bottom: 0.3rem;
+}
+.stat-label {
+  font-size: clamp(0.85rem, 1vw, 1.05rem);
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  opacity: 0.7;
+}
+
+/* ── CTA link ── */
+.cta-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 2rem;
+  font-weight: 600;
+  font-size: 0.95rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border-bottom: 2px solid var(--red);
+  padding-bottom: 4px;
+  transition: gap 0.3s ease;
+}
+.cta-link:hover {
+  gap: 1rem;
+}
+.cta-link svg {
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+}
+
+/* ══════════════════════════════════════
+   PANEL 1 — LOGO / HERO
+   ══════════════════════════════════════ */
+.panel-logo .content {
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  gap: 3rem;
+}
+.panel-logo .logo-img {
+  width: clamp(200px, 28vw, 380px);
+  pointer-events: none;
+}
+.scroll-hint {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.85rem;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  opacity: 0.45;
+  animation: hintPulse 2.5s ease-in-out infinite;
+}
+@keyframes hintPulse {
+  0%, 100% { opacity: 0.45; transform: translateX(0); }
+  50% { opacity: 0.7; transform: translateX(8px); }
+}
+
+/* ══════════════════════════════════════
+   PANEL 2 — JUONTAJA
+   ══════════════════════════════════════ */
+.panel-juontaja .content {
+  justify-content: space-between;
+}
+.panel-juontaja .text-block {
+  max-width: 520px;
+}
+.panel-juontaja .stat {
+  flex-shrink: 0;
+  margin-left: 4vw;
+}
+
+/* ══════════════════════════════════════
+   PANEL 3 — ILMAILU
+   ══════════════════════════════════════ */
+.panel-ilmailu .content {
+  justify-content: space-between;
+  gap: 6vw;
+}
+.panel-ilmailu .image-block {
+  flex: 0 0 42%;
+  height: 70vh;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 30px 80px rgba(0,0,0,0.12);
+}
+.panel-ilmailu .image-block img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.panel-ilmailu .text-side {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.panel-ilmailu .stat {
+  margin-top: 2.5rem;
+  text-align: left;
+}
+.panel-ilmailu .stat .stat-number {
+  font-size: clamp(3rem, 5vw, 5rem);
+}
+
+/* ══════════════════════════════════════
+   PANEL 4 — HEVOSET
+   ══════════════════════════════════════ */
+.panel-hevoset .content {
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 0 8vw;
+}
+.panel-hevoset p {
+  max-width: 600px;
+}
+
+/* ══════════════════════════════════════
+   PANEL 5 — REFERENSSIT
+   ══════════════════════════════════════ */
+.panel-referenssit .content {
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 6vh 8vw;
+}
+.ref-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.8rem;
+  width: 100%;
+  max-width: 1100px;
+  margin-top: 2rem;
+}
+.ref-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 2rem 1.8rem;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.ref-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.1);
+}
+.ref-card h3 {
+  font-size: 1.15rem;
+  margin-bottom: 0.6rem;
+  color: var(--dark);
+}
+.ref-card p {
+  font-size: 0.88rem;
+  line-height: 1.65;
+  opacity: 0.75;
+  max-width: none;
+}
+
+/* ══════════════════════════════════════
+   PANEL 6 — YHTEISTYOKUMPPANIT
+   ══════════════════════════════════════ */
+.panel-partners .content {
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+.partner-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 4rem;
+  margin-top: 3rem;
+}
+.partner-grid a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  opacity: 0.7;
+}
+.partner-grid a:hover {
+  opacity: 1;
+  transform: scale(1.05);
+}
+.partner-grid img {
+  height: 50px;
+  width: auto;
+  max-width: 180px;
+  filter: brightness(0) invert(1);
+  object-fit: contain;
+}
+
+/* ══════════════════════════════════════
+   PANEL 7 — FOOTER
+   ══════════════════════════════════════ */
+.panel-footer .content {
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  gap: 2rem;
+}
+.panel-footer .logo-img {
+  width: 180px;
+  margin-bottom: 1rem;
+}
+.social-links {
+  display: flex;
+  gap: 1.8rem;
+  margin-top: 0.5rem;
+}
+.social-links a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid rgba(31,31,31,0.15);
+  transition: border-color 0.3s ease, background 0.3s ease;
+}
+.social-links a:hover {
+  border-color: var(--red);
+  background: rgba(204,52,68,0.06);
+}
+.social-links svg {
+  width: 18px;
+  height: 18px;
+  fill: var(--dark);
+}
+.footer-info {
+  font-size: 0.82rem;
+  opacity: 0.5;
+  margin-top: 1rem;
+  line-height: 1.7;
+}
+
+/* ══════════════════════════════════════
+   PROGRESS BAR
+   ══════════════════════════════════════ */
+.progress-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  background: var(--red);
+  width: 0%;
+  z-index: 100;
+  transition: width 0.15s ease-out;
+}
+
+/* ══════════════════════════════════════
+   NAV DOTS
+   ══════════════════════════════════════ */
+.nav-dots {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 14px;
+  z-index: 100;
+  padding: 10px 22px;
+  border-radius: 30px;
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(255,255,255,0.12);
+}
+.nav-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 2px solid rgba(31,31,31,0.3);
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.35s ease;
+  padding: 0;
+  outline: none;
+}
+.nav-dot.active {
+  background: var(--red);
+  border-color: var(--red);
+  transform: scale(1.25);
+}
+.nav-dot:hover:not(.active) {
+  border-color: var(--red);
+}
+
+/* ══════════════════════════════════════
+   MOBILE — VERTICAL FALLBACK
+   ══════════════════════════════════════ */
+@media (max-width: 767px) {
+  html, body {
+    overflow: auto;
+    height: auto;
+  }
+  .scroll-container {
+    flex-direction: column;
+    width: 100vw;
+    height: auto;
+    overflow-x: hidden;
+    overflow-y: visible;
+    scroll-snap-type: y mandatory;
+  }
+  .panel {
+    flex: 0 0 100vh;
+    width: 100vw;
+    height: 100vh;
+    cursor: default;
+    scroll-snap-align: start;
+  }
+  .panel::after {
+    top: auto;
+    right: auto;
+    bottom: 0;
+    left: 10%;
+    width: 80%;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(0,0,0,0.08) 20%, rgba(0,0,0,0.12) 50%, rgba(0,0,0,0.08) 80%, transparent);
+  }
+  .panel.dark::after {
+    background: linear-gradient(to right, transparent, rgba(255,255,255,0.06) 20%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.06) 80%, transparent);
+  }
+  .panel .content {
+    padding: 0 6vw;
+  }
+
+  /* Juontaja */
+  .panel-juontaja .content {
+    flex-direction: column;
+    justify-content: center;
+    gap: 2.5rem;
+  }
+  .panel-juontaja .stat {
+    margin-left: 0;
+  }
+
+  /* Ilmailu */
+  .panel-ilmailu .content {
+    flex-direction: column;
+    gap: 2rem;
+  }
+  .panel-ilmailu .image-block {
+    flex: 0 0 auto;
+    width: 85%;
+    height: 30vh;
+  }
+
+  /* Hevoset */
+  .panel-hevoset .content {
+    padding: 0 6vw;
+  }
+
+  /* Referenssit */
+  .panel-referenssit .content {
+    padding: 4vh 6vw;
+    overflow-y: auto;
+  }
+  .ref-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  .ref-card {
+    padding: 1.4rem 1.2rem;
+  }
+
+  /* Partners */
+  .partner-grid {
+    gap: 2rem;
+  }
+  .partner-grid img {
+    height: 36px;
+  }
+
+  /* Hide horizontal progress bar on mobile */
+  .progress-bar {
+    display: none;
+  }
+
+  .nav-dots {
+    bottom: 16px;
+  }
+
+  .scroll-hint span {
+    display: none;
+  }
+  .scroll-hint::after {
+    content: 'Selaa alas';
+    font-size: 0.85rem;
+  }
+}
+
+/* Prevent overscroll bounce */
+@media (min-width: 768px) {
+  html {
+    overscroll-behavior: none;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- Progress bar -->
+<div class="progress-bar" id="progressBar"></div>
+
+<!-- Nav dots -->
+<nav class="nav-dots" id="navDots">
+  <button class="nav-dot active" data-index="0" aria-label="Logo"></button>
+  <button class="nav-dot" data-index="1" aria-label="Juontaja"></button>
+  <button class="nav-dot" data-index="2" aria-label="Ilmailu"></button>
+  <button class="nav-dot" data-index="3" aria-label="Hevoset"></button>
+  <button class="nav-dot" data-index="4" aria-label="Referenssit"></button>
+  <button class="nav-dot" data-index="5" aria-label="Yhteisty&ouml;kumppanit"></button>
+  <button class="nav-dot" data-index="6" aria-label="Yhteystiedot"></button>
+</nav>
+
+<!-- ════════════════ SCROLL CONTAINER ════════════════ -->
+<div class="scroll-container" id="scrollContainer">
+
+  <!-- PANEL 1 — LOGO -->
+  <section class="panel light panel-logo" id="logo">
+    <div class="content">
+      <img src="https://www.ahteemu.fi/wp-content/uploads/2024/03/ahteemu-logo-black.png" alt="Ahteemu" class="logo-img reveal-element">
+      <div class="scroll-hint reveal-element">
+        <span>Selaa</span>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- PANEL 2 — JUONTAJA -->
+  <section class="panel dark panel-juontaja" id="juontaja">
+    <div class="bg-image" style="background-image: url('https://www.ahteemu.fi/wp-content/uploads/2024/04/ahteemu-bg-1920x1080px-juontaja.jpg');"></div>
+    <div class="content">
+      <div class="text-block">
+        <h2 class="reveal-element">Juontaja</h2>
+        <p class="reveal-element">Laita k&auml;teeni mikrofoni, eteeni yleis&ouml;, olen kotonani. Vuosien varrella olen saanut juontaa tapahtumia seminaareista burleski-iltamiin, Olympiastadionilta TV-studioon, Helsingist&auml; Ouluun, suomeksi ja englanniksi, my&ouml;s p&aring; svenska.</p>
+        <a href="#referenssit" class="cta-link reveal-element" data-nav="4">
+          Katso referenssini
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+      <div class="stat reveal-element">
+        <div class="stat-number"><span class="counter" data-target="100">0</span>+</div>
+        <div class="stat-label">juonnettua tapahtumaa</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PANEL 3 — ILMAILU -->
+  <section class="panel light panel-ilmailu" id="ilmailu">
+    <div class="content">
+      <div class="image-block reveal-element">
+        <img src="https://www.ahteemu.fi/wp-content/uploads/2024/04/ahteemu-bg-1920x1080px-ilmailu.jpg" alt="Ilmailu">
+      </div>
+      <div class="text-side">
+        <h2 class="reveal-element">Ilmailu</h2>
+        <p class="reveal-element">Lapsuuden haaveesta tuli totta ja p&auml;&auml;sin unelma-ammattiini lent&auml;j&auml;ksi. 25 vuoden ja yli 12&nbsp;000 lentotunnin j&auml;lkeen on se sama pikkupoikamainen innostus tallella. Samalla maailma on pienentynyt. Tyynenmeren molemmat rannat, Pohjoisnapa, Gr&ouml;nlanti, Siperia, Gobin autiomaa.</p>
+        <div class="stat reveal-element">
+          <div class="stat-number"><span class="counter" data-target="12000">0</span>+</div>
+          <div class="stat-label">lentotuntia</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PANEL 4 — HEVOSET -->
+  <section class="panel dark panel-hevoset" id="hevoset">
+    <div class="bg-image" style="background-image: url('https://www.ahteemu.fi/wp-content/uploads/2024/04/ahteemu-bg-1920x1080px-hevoset.jpg');"></div>
+    <div class="content">
+      <h2 class="reveal-element">Hevoset</h2>
+      <p class="reveal-element">Hevosen lemp&auml;&auml; katse, turvan pehme&auml; iho, tuttu h&ouml;r&auml;hdys karsinasta. Tunne, jonka saa ollessaan hevosen kanssa, on sellainen, johon ei ikin&auml; kyll&auml;sty. Turpaterapiaa, sit&auml; hevosen kanssa oleminen kirjaimellisesti on.</p>
+      <p class="reveal-element" style="margin-top: 1.2rem;">Valmentajana pyrin l&ouml;yt&auml;m&auml;&auml;n sinulle ja hevosellesi sopivan tavan oppia ja omaksua uutta. Valmentaessani olen vaativa, mutta kannustava. Tarkka, mutta lemp&auml;&auml;. Tosissani, mutten tosikkona.</p>
+    </div>
+  </section>
+
+  <!-- PANEL 5 — REFERENSSIT -->
+  <section class="panel light panel-referenssit" id="referenssit">
+    <div class="content">
+      <h2 class="reveal-element">Referenssit</h2>
+      <div class="ref-grid">
+        <div class="ref-card reveal-element">
+          <h3>Helsinki International Horse Show</h3>
+          <p>Suomen suurin ratsastustapahtuma. Vuosittain yli 50&nbsp;000 ratsastuksen yst&auml;v&auml;&auml; t&auml;ytt&auml;&auml; Helsingin J&auml;&auml;hallin katsomot.</p>
+        </div>
+        <div class="ref-card reveal-element">
+          <h3>Cityravit</h3>
+          <p>Hevosurheilu kaupunkien keskustoihin. Stadikalla 2013 &middot; Kaivarissa 2017 &middot; Lumiravit 2018 &middot; Bastionissa 2022&ndash;2023</p>
+        </div>
+        <div class="ref-card reveal-element">
+          <h3>Hevoset-messut</h3>
+          <p>Tampereella j&auml;rjestett&auml;v&auml;t hevosharrastajille suunnatut messut.</p>
+        </div>
+        <div class="ref-card reveal-element">
+          <h3>Kavionjälkiä <span style="font-family:'Montserrat',sans-serif;font-weight:400;font-size:0.85em;opacity:0.6;">(Yle, TV2)</span></h3>
+          <p>Kuninkuusravien TV-ohjelman studio-osuudet.</p>
+        </div>
+        <div class="ref-card reveal-element">
+          <h3>Kavioliitossa-podcast</h3>
+          <p>Podcast-sarja Katja St&auml;hlin kanssa. &quot;Asiaa vain siteeksi&quot;.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PANEL 6 — YHTEISTYOKUMPPANIT -->
+  <section class="panel dark panel-partners" id="kumppanit">
+    <div class="content">
+      <h2 class="reveal-element">Yhteisty&ouml;kumppanit</h2>
+      <div class="partner-grid reveal-element">
+        <a href="https://backontrack.fi/" target="_blank" rel="noopener">
+          <img src="https://www.ahteemu.fi/wp-content/uploads/2024/04/Back-on-Track-logo-3.png" alt="Back on Track">
+        </a>
+        <a href="https://houseofhorseshelsinki.com/fi" target="_blank" rel="noopener">
+          <img src="https://www.ahteemu.fi/wp-content/uploads/2024/04/HHH-logo.png" alt="House of Horses Helsinki">
+        </a>
+        <a href="https://dogtrail.fi/" target="_blank" rel="noopener">
+          <img src="https://www.ahteemu.fi/wp-content/uploads/2024/05/dogtrail-logo-458px.png" alt="Dogtrail">
+        </a>
+        <a href="https://happydog.fi/" target="_blank" rel="noopener">
+          <img src="https://www.ahteemu.fi/wp-content/uploads/2024/05/happydog-logo-458px.jpg" alt="Happy Dog">
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- PANEL 7 — FOOTER -->
+  <section class="panel light panel-footer" id="footer">
+    <div class="content">
+      <img src="https://www.ahteemu.fi/wp-content/uploads/2024/03/ahteemu-logo-black.png" alt="Ahteemu" class="logo-img reveal-element">
+      <div class="social-links reveal-element">
+        <a href="https://facebook.com/ahteemu/" target="_blank" rel="noopener" aria-label="Facebook">
+          <svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+        </a>
+        <a href="https://instagram.com/ahteemu/" target="_blank" rel="noopener" aria-label="Instagram">
+          <svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.5" cy="6.5" r="1.2"/></svg>
+        </a>
+        <a href="https://x.com/ahteemu" target="_blank" rel="noopener" aria-label="X">
+          <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        </a>
+      </div>
+      <div class="footer-info reveal-element">
+        Teemu Ahtee &mdash; Juontaja &middot; Lent&auml;j&auml; &middot; Hevosvalmentaja<br>
+        ahteemu.fi
+      </div>
+    </div>
+  </section>
+
+</div><!-- /scroll-container -->
+
+<script>
+(function() {
+  const container = document.getElementById('scrollContainer');
+  const panels = document.querySelectorAll('.panel');
+  const progressBar = document.getElementById('progressBar');
+  const navDots = document.querySelectorAll('.nav-dot');
+  const isMobile = () => window.innerWidth < 768;
+
+  // ── Wheel → horizontal scroll (desktop only) ──
+  // Use scrollBy for Safari compatibility. Also handle trackpad horizontal swipes.
+  container.addEventListener('wheel', function(e) {
+    if (isMobile()) return;
+    e.preventDefault();
+    // Use deltaX if horizontal swipe, otherwise convert deltaY
+    const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+    container.scrollBy({ left: delta, behavior: 'auto' });
+  }, { passive: false });
+
+  // ── Click panel to advance ──
+  panels.forEach((panel, i) => {
+    panel.addEventListener('click', function(e) {
+      if (e.target.closest('a, button')) return;
+      if (i < panels.length - 1) {
+        const next = panels[i + 1];
+        if (isMobile()) {
+          next.scrollIntoView({ behavior: 'smooth' });
+        } else {
+          container.scrollTo({ left: next.offsetLeft, behavior: 'smooth' });
+        }
+      }
+    });
+  });
+
+  // ── Keyboard navigation ──
+  document.addEventListener('keydown', function(e) {
+    if (isMobile()) return;
+    const panelWidth = window.innerWidth;
+    const currentIndex = Math.round(container.scrollLeft / panelWidth);
+    if ((e.key === 'ArrowRight' || e.key === ' ') && currentIndex < panels.length - 1) {
+      e.preventDefault();
+      container.scrollTo({ left: panels[currentIndex + 1].offsetLeft, behavior: 'smooth' });
+    } else if (e.key === 'ArrowLeft' && currentIndex > 0) {
+      e.preventDefault();
+      container.scrollTo({ left: panels[currentIndex - 1].offsetLeft, behavior: 'smooth' });
+    }
+  });
+
+  // ── CTA link navigation ──
+  document.querySelectorAll('.cta-link[data-nav]').forEach(link => {
+    link.addEventListener('click', function(e) {
+      e.preventDefault();
+      const idx = parseInt(this.dataset.nav);
+      if (isMobile()) {
+        panels[idx].scrollIntoView({ behavior: 'smooth' });
+      } else {
+        container.scrollTo({ left: panels[idx].offsetLeft, behavior: 'smooth' });
+      }
+    });
+  });
+
+  // ── Nav dots ──
+  navDots.forEach(dot => {
+    dot.addEventListener('click', function() {
+      const idx = parseInt(this.dataset.index);
+      if (isMobile()) {
+        panels[idx].scrollIntoView({ behavior: 'smooth' });
+      } else {
+        container.scrollTo({ left: panels[idx].offsetLeft, behavior: 'smooth' });
+      }
+    });
+  });
+
+  // ── Progress bar + active dot update ──
+  function updateProgress() {
+    let scrollLeft, maxScroll, progress;
+    if (isMobile()) {
+      scrollLeft = window.scrollY || document.documentElement.scrollTop;
+      maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+    } else {
+      scrollLeft = container.scrollLeft;
+      maxScroll = container.scrollWidth - container.clientWidth;
+    }
+    progress = maxScroll > 0 ? scrollLeft / maxScroll : 0;
+    progressBar.style.width = (progress * 100) + '%';
+
+    // Active dot
+    const panelWidth = isMobile() ? window.innerHeight : window.innerWidth;
+    const currentScroll = isMobile() ? (window.scrollY || document.documentElement.scrollTop) : container.scrollLeft;
+    const activeIndex = Math.round(currentScroll / panelWidth);
+
+    navDots.forEach((dot, i) => {
+      dot.classList.toggle('active', i === activeIndex);
+    });
+  }
+
+  container.addEventListener('scroll', updateProgress);
+  window.addEventListener('scroll', updateProgress);
+
+  // ── IntersectionObserver — reveal elements ──
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, {
+    root: isMobile() ? null : container,
+    threshold: 0.15
+  });
+
+  document.querySelectorAll('.reveal-element').forEach(el => {
+    revealObserver.observe(el);
+  });
+
+  // ── Animated counters ──
+  const counterObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && !entry.target.dataset.counted) {
+        entry.target.dataset.counted = 'true';
+        animateCounter(entry.target);
+      }
+    });
+  }, {
+    root: isMobile() ? null : container,
+    threshold: 0.5
+  });
+
+  document.querySelectorAll('.counter').forEach(el => {
+    counterObserver.observe(el);
+  });
+
+  function animateCounter(el) {
+    const target = parseInt(el.dataset.target);
+    const duration = 2000;
+    const start = performance.now();
+
+    function step(now) {
+      const elapsed = now - start;
+      const progress = Math.min(elapsed / duration, 1);
+      // Ease out cubic
+      const eased = 1 - Math.pow(1 - progress, 3);
+      const current = Math.round(eased * target);
+      el.textContent = current.toLocaleString('fi-FI');
+      if (progress < 1) {
+        requestAnimationFrame(step);
+      }
+    }
+    requestAnimationFrame(step);
+  }
+
+  // ── Re-init observer on resize (mobile ↔ desktop) ──
+  let wasMobile = isMobile();
+  window.addEventListener('resize', () => {
+    const nowMobile = isMobile();
+    if (wasMobile !== nowMobile) {
+      wasMobile = nowMobile;
+      // Recreate observers with correct root
+      revealObserver.disconnect();
+      const newRoot = nowMobile ? null : container;
+      const newObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) entry.target.classList.add('visible');
+        });
+      }, { root: newRoot, threshold: 0.15 });
+      document.querySelectorAll('.reveal-element').forEach(el => newObserver.observe(el));
+    }
+  });
+
+  // Initial
+  updateProgress();
+})();
+</script>
+</body>
+</html>

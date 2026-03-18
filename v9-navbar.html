@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ahteemu — Teemu Ahtee (v9)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --red: #CC3444;
+  --dark: #1f1f1f;
+  --cream: #f5f2ed;
+  --card-count: 7;
+}
+
+html {
+  overflow-x: hidden;
+}
+
+body {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 300;
+  color: var(--dark);
+  background: var(--dark);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Hide scrollbar */
+body::-webkit-scrollbar { display: none; }
+body { scrollbar-width: none; }
+
+/* ── Card wrapper & sticky card ── */
+.card-wrapper {
+  height: 200vh;
+  position: relative;
+}
+.card-wrapper:last-child {
+  height: 100vh;
+}
+
+.card {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100dvh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+  cursor: pointer;
+  z-index: 1;
+}
+.card-wrapper:last-child .card {
+  cursor: default;
+  box-shadow: none;
+}
+
+/* ── Background images ── */
+.card .bg-image {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: 0;
+}
+
+/* ── Card themes ── */
+.card.cream {
+  background: var(--cream);
+  color: var(--dark);
+}
+.card.dark {
+  background: var(--dark);
+  color: #fff;
+}
+
+.card .content {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 1200px;
+  padding: 4rem 6rem;
+}
+
+/* ── Typography ── */
+h1, h2, h3 {
+  font-family: 'Playfair Display', serif;
+}
+
+h2 {
+  font-size: clamp(3rem, 7vw, 6rem);
+  font-weight: 700;
+  line-height: 1.05;
+  margin-bottom: 2rem;
+}
+
+.card.dark h2 {
+  color: #fff;
+}
+
+p {
+  font-size: clamp(1rem, 1.1vw, 1.2rem);
+  line-height: 1.8;
+  max-width: 600px;
+  opacity: 0.9;
+}
+
+/* ── Logo card ── */
+.card-logo {
+  flex-direction: column;
+  gap: 2rem;
+}
+.card-logo .logo-img {
+  width: clamp(200px, 30vw, 380px);
+  height: auto;
+}
+.scroll-hint {
+  font-size: 0.85rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  opacity: 0.5;
+  margin-top: 1rem;
+  animation: hintPulse 2.5s ease-in-out infinite;
+}
+@keyframes hintPulse {
+  0%, 100% { opacity: 0.3; transform: translateY(0); }
+  50% { opacity: 0.6; transform: translateY(6px); }
+}
+.scroll-hint svg {
+  display: block;
+  margin: 0.5rem auto 0;
+  width: 20px;
+  height: 20px;
+  stroke: var(--dark);
+  opacity: 0.4;
+}
+
+/* ── Stat numbers ── */
+.stat {
+  margin-top: 3rem;
+}
+.stat-number {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(4rem, 10vw, 8rem);
+  font-weight: 700;
+  color: var(--red);
+  line-height: 1;
+  min-height: 1em;
+  display: block;
+  white-space: nowrap;
+  min-width: 5ch;
+}
+.stat-label {
+  font-size: clamp(0.9rem, 1.1vw, 1.1rem);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-top: 0.5rem;
+  opacity: 0.7;
+}
+
+/* ── CTA link ── */
+.cta-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 2rem;
+  color: var(--red);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.95rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  transition: gap 0.3s ease;
+}
+.cta-link:hover {
+  gap: 1rem;
+}
+.cta-link svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: var(--red);
+  stroke-width: 2;
+  transition: transform 0.3s ease;
+}
+
+/* ── Two-column layout ── */
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: start;
+  overflow: hidden;
+}
+.two-col > * {
+  min-width: 0;
+}
+.two-col .col-left h2 {
+  margin-bottom: 0;
+}
+.two-col .col-right {
+  padding-top: 0.5rem;
+}
+
+/* ── Ilmailu decorative image ── */
+.ilmailu-deco {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 45%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  opacity: 0.12;
+  z-index: 0;
+  mask-image: linear-gradient(to left, rgba(0,0,0,0.6), transparent);
+  -webkit-mask-image: linear-gradient(to left, rgba(0,0,0,0.6), transparent);
+}
+
+/* ── Hevoset centered ── */
+.card-hevoset .content {
+  text-align: center;
+  max-width: 800px;
+}
+.card-hevoset p {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+/* ── Referenssit grid ── */
+.ref-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2.5rem;
+  margin-top: 3rem;
+}
+.ref-item {
+  border-top: 2px solid var(--red);
+  padding-top: 1.5rem;
+}
+.ref-item h3 {
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  color: var(--dark);
+}
+.ref-item p {
+  font-size: 0.95rem;
+  line-height: 1.7;
+  opacity: 0.75;
+  max-width: none;
+}
+
+/* ── Partners ── */
+.partner-grid {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3.5rem;
+  flex-wrap: wrap;
+  margin-top: 3rem;
+}
+.partner-grid a {
+  display: block;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  opacity: 0.7;
+}
+.partner-grid a:hover {
+  opacity: 1;
+  transform: scale(1.05);
+}
+.partner-grid img {
+  height: 50px;
+  width: auto;
+  filter: brightness(0) invert(1);
+  object-fit: contain;
+}
+
+/* ── Footer ── */
+.card-footer {
+  flex-direction: column;
+  gap: 2rem;
+}
+.card-footer .logo-img {
+  width: 180px;
+  height: auto;
+}
+.social-links {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+}
+.social-links a {
+  color: var(--dark);
+  width: 28px;
+  height: 28px;
+  display: block;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+.social-links a:hover {
+  color: var(--red);
+  transform: scale(1.15);
+}
+.social-links svg {
+  width: 100%;
+  height: 100%;
+  fill: currentColor;
+}
+.footer-meta {
+  font-size: 0.8rem;
+  opacity: 0.5;
+  letter-spacing: 0.08em;
+}
+
+/* ── Navbar ── */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 3rem;
+  height: 70px;
+  background: rgba(31, 31, 31, 0.85);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  transform: translateY(-100%);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              background 0.3s ease;
+}
+
+.navbar.visible {
+  transform: translateY(0);
+}
+
+.navbar.at-top {
+  background: transparent;
+  border-bottom-color: transparent;
+}
+
+.navbar-logo {
+  height: 36px;
+  width: auto;
+  filter: brightness(0) invert(1);
+  opacity: 0.9;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+}
+
+.navbar-logo:hover {
+  opacity: 1;
+}
+
+.navbar-links {
+  display: flex;
+  align-items: center;
+  gap: 2.5rem;
+  list-style: none;
+}
+
+.navbar-links a {
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.6);
+  text-decoration: none;
+  transition: color 0.3s ease;
+  cursor: pointer;
+  position: relative;
+}
+
+.navbar-links a:hover,
+.navbar-links a.active {
+  color: #fff;
+}
+
+.navbar-links a::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--red);
+  transition: width 0.3s ease;
+}
+
+.navbar-links a.active::after {
+  width: 100%;
+}
+
+/* Hamburger (mobile) */
+.navbar-toggle {
+  display: none;
+  width: 28px;
+  height: 20px;
+  cursor: pointer;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.navbar-toggle span {
+  display: block;
+  width: 100%;
+  height: 2px;
+  background: rgba(255,255,255,0.8);
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.navbar-toggle.open span:nth-child(1) { transform: rotate(45deg) translate(6px, 6px); }
+.navbar-toggle.open span:nth-child(2) { opacity: 0; }
+.navbar-toggle.open span:nth-child(3) { transform: rotate(-45deg) translate(6px, -6px); }
+
+/* Mobile menu */
+.navbar-mobile {
+  display: none;
+  position: fixed;
+  top: 70px;
+  left: 0;
+  right: 0;
+  background: rgba(31, 31, 31, 0.95);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  padding: 2rem 3rem;
+  z-index: 199;
+  transform: translateY(-100%);
+  opacity: 0;
+  transition: transform 0.4s ease, opacity 0.3s ease;
+}
+
+.navbar-mobile.open {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.navbar-mobile a {
+  display: block;
+  font-size: 1rem;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  color: rgba(255,255,255,0.7);
+  text-decoration: none;
+  padding: 0.8rem 0;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  transition: color 0.3s ease;
+}
+
+.navbar-mobile a:hover {
+  color: #fff;
+}
+
+/* ── Reveal animations ── */
+.reveal-element {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal-element.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.reveal-element:nth-child(2) { transition-delay: 0.12s; }
+.reveal-element:nth-child(3) { transition-delay: 0.24s; }
+.reveal-element:nth-child(4) { transition-delay: 0.36s; }
+.reveal-element:nth-child(5) { transition-delay: 0.48s; }
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+  .navbar { padding: 0 1.5rem; }
+  .navbar-links { display: none; }
+  .navbar-toggle { display: flex; }
+  .navbar-mobile { display: block; }
+  .card .content {
+    padding: 3rem 2rem;
+  }
+  .two-col {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  .ref-grid {
+    grid-template-columns: 1fr;
+  }
+  h2 {
+    font-size: clamp(2.5rem, 8vw, 4rem);
+  }
+  .stat-number {
+    font-size: clamp(3rem, 12vw, 5rem);
+  }
+  .partner-grid {
+    gap: 2rem;
+  }
+  .partner-grid img {
+    height: 36px;
+  }
+  .ilmailu-deco {
+    width: 100%;
+    opacity: 0.06;
+  }
+}
+
+@media (max-width: 600px) {
+  /* Disable sticky stacking on mobile, use regular scroll */
+  .card-wrapper {
+    height: auto !important;
+  }
+  .card {
+    position: relative !important;
+    top: auto !important;
+    height: auto;
+    min-height: 100vh;
+    min-height: 100dvh;
+    box-shadow: none;
+    scroll-snap-align: start;
+  }
+  body {
+    scroll-snap-type: y mandatory;
+  }
+  .card .content {
+    padding: 4rem 1.5rem;
+  }
+  .navbar { padding: 0 1.5rem; height: 60px; }
+  .navbar-logo { height: 28px; }
+}
+</style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar" id="navbar">
+  <img class="navbar-logo" id="navLogo" src="https://www.ahteemu.fi/wp-content/uploads/2024/03/ahteemu-logo-black.png" alt="Ahteemu">
+  <ul class="navbar-links" id="navLinks">
+    <li><a href="#juontaja" data-nav="1">Juontaja</a></li>
+    <li><a href="#ilmailu" data-nav="2">Ilmailu</a></li>
+    <li><a href="#hevoset" data-nav="3">Hevoset</a></li>
+    <li><a href="#referenssit" data-nav="4">Referenssit</a></li>
+    <li><a href="#kumppanit" data-nav="5">Yhteistyö</a></li>
+  </ul>
+  <div class="navbar-toggle" id="navToggle">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- Mobile menu -->
+<div class="navbar-mobile" id="navMobile">
+  <a href="#juontaja" data-nav="1">Juontaja</a>
+  <a href="#ilmailu" data-nav="2">Ilmailu</a>
+  <a href="#hevoset" data-nav="3">Hevoset</a>
+  <a href="#referenssit" data-nav="4">Referenssit</a>
+  <a href="#kumppanit" data-nav="5">Yhteistyökumppanit</a>
+</div>
+
+<!-- Card 1: Logo -->
+<div class="card-wrapper" id="wrapper-logo">
+  <section class="card cream card-logo" id="logo" data-card="0">
+    <div class="content" style="text-align:center;">
+      <img src="https://www.ahteemu.fi/wp-content/uploads/2024/03/ahteemu-logo-black.png" alt="Ahteemu" class="logo-img reveal-element">
+      <div class="scroll-hint reveal-element">
+        Selaa alaspäin
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- Card 2: Juontaja -->
+<div class="card-wrapper" id="wrapper-juontaja">
+  <section class="card dark" id="juontaja" data-card="1">
+    <div class="bg-image" style="background-image: url('https://www.ahteemu.fi/wp-content/uploads/2024/04/ahteemu-bg-1920x1080px-juontaja.jpg'); filter: brightness(0.3);"></div>
+    <div class="content">
+      <h2 class="reveal-element">Juontaja</h2>
+      <p class="reveal-element">Laita käteeni mikrofoni, eteeni yleisö, olen kotonani. Vuosien varrella olen saanut juontaa tapahtumia seminaareista burleski-iltamiin, Olympiastadionilta TV-studioon, Helsingistä Ouluun, suomeksi ja englanniksi, myös på svenska.</p>
+      <a href="#referenssit" class="cta-link reveal-element" onclick="event.preventDefault(); scrollToCard(4);">
+        Katso referenssini
+        <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      <div class="stat reveal-element">
+        <div class="stat-number" data-target="100" data-prefix="Yli ">0</div>
+        <div class="stat-label">juonnettua tapahtumaa</div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- Card 3: Ilmailu -->
+<div class="card-wrapper" id="wrapper-ilmailu">
+  <section class="card cream" id="ilmailu" data-card="2">
+    <div class="ilmailu-deco" style="background-image: url('https://www.ahteemu.fi/wp-content/uploads/2024/04/ahteemu-bg-1920x1080px-ilmailu.jpg');"></div>
+    <div class="content">
+      <div class="two-col">
+        <div class="col-left">
+          <h2 class="reveal-element">Ilmailu</h2>
+          <div class="stat reveal-element">
+            <div class="stat-number" data-target="12000" data-prefix="Yli ">0</div>
+            <div class="stat-label">lentotuntia</div>
+          </div>
+        </div>
+        <div class="col-right">
+          <p class="reveal-element">Lapsuuden haaveesta tuli totta ja pääsin unelma-ammattiini lentäjäksi. 25 vuoden ja yli 12 000 lentotunnin jälkeen on se sama pikkupoikamainen innostus tallella.</p>
+          <p class="reveal-element" style="margin-top:1.2rem;">Samalla maailma on pienentynyt. Tyynenmeren molemmat rannat, Pohjoisnapa, Grönlanti, Siperia, Gobin autiomaa. Kuulostavat kaukaisilta ja saavuttamattomilta kohteilta. Onnekseni olen ne kaikki päässyt näkemään maisemakonttorini ikkunoista.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- Card 4: Hevoset -->
+<div class="card-wrapper" id="wrapper-hevoset">
+  <section class="card dark card-hevoset" id="hevoset" data-card="3">
+    <div class="bg-image" style="background-image: url('https://www.ahteemu.fi/wp-content/uploads/2024/04/ahteemu-bg-1920x1080px-hevoset.jpg'); filter: brightness(0.3);"></div>
+    <div class="content">
+      <h2 class="reveal-element">Hevoset</h2>
+      <p class="reveal-element">Hevosen lempeä katse, turvan pehmeä iho, tuttu hörähdys karsinasta. Tunne, jonka saa ollessaan hevosen kanssa, on sellainen, johon ei ikinä kyllästy. Turpaterapiaa, sitä hevosen kanssa oleminen kirjaimellisesti on.</p>
+      <p class="reveal-element" style="margin-top:1.2rem;">Valmentajana pyrin löytämään sinulle ja hevosellesi sopivan tavan oppia ja omaksua uutta. Kyselen, kuuntelen. Tasollasi ei ole merkitystä.</p>
+      <p class="reveal-element" style="margin-top:1.2rem;">Valmentaessani olen vaativa, mutta kannustava. Tarkka, mutta lempeä. Tosissani, mutten tosikkona.</p>
+    </div>
+  </section>
+</div>
+
+<!-- Card 5: Referenssit -->
+<div class="card-wrapper" id="wrapper-referenssit">
+  <section class="card cream" id="referenssit" data-card="4">
+    <div class="content" style="overflow-y:auto; max-height:100vh; padding-top:5rem; padding-bottom:5rem;">
+      <h2 class="reveal-element">Referenssit</h2>
+      <div class="ref-grid">
+        <div class="ref-item reveal-element">
+          <h3>Helsinki International Horse Show</h3>
+          <p>Suomen suurin ratsastustapahtuma. Vuosittain yli 50 000 ratsastuksen ystävää täyttää Helsingin Jäähallin katsomot. Show-ohjelmien juontaminen on ollut jo useamman vuoden ajan vastuullani.</p>
+        </div>
+        <div class="ref-item reveal-element">
+          <h3>"Cityravit"</h3>
+          <p>Hevosurheilu kaupunkien keskustoihin. Stadikalla 2013 &middot; Kaivarissa 2017 &middot; Lumiravit 2018 &middot; Bastionissa 2022&ndash;2023</p>
+        </div>
+        <div class="ref-item reveal-element">
+          <h3>Hevoset-messut</h3>
+          <p>Tampereella järjestettävät hevosharrastajille suunnatut messut.</p>
+        </div>
+        <div class="ref-item reveal-element">
+          <h3>Kaviionjälkiä (Yle Areena, TV2)</h3>
+          <p>Kuninkuusravien TV-ohjelman studio-osuudet.</p>
+        </div>
+        <div class="ref-item reveal-element">
+          <h3>Kavioliitossa-podcast</h3>
+          <p>Podcast-sarja Katja Stählin kanssa. Sarjan motto: "Asiaa vain siteeksi".</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- Card 6: Yhteistyökumppanit -->
+<div class="card-wrapper" id="wrapper-kumppanit">
+  <section class="card dark" id="kumppanit" data-card="5" style="text-align:center;">
+    <div class="content" style="text-align:center;">
+      <h2 class="reveal-element">Yhteistyökumppanit</h2>
+      <div class="partner-grid reveal-element">
+        <a href="https://backontrack.fi/" target="_blank" rel="noopener">
+          <img src="https://www.ahteemu.fi/wp-content/uploads/2024/04/Back-on-Track-logo-3.png" alt="Back on Track">
+        </a>
+        <a href="https://houseofhorseshelsinki.com/fi" target="_blank" rel="noopener">
+          <img src="https://www.ahteemu.fi/wp-content/uploads/2024/04/HHH-logo.png" alt="House of Horses Helsinki">
+        </a>
+        <a href="https://dogtrail.fi/" target="_blank" rel="noopener">
+          <img src="https://www.ahteemu.fi/wp-content/uploads/2024/05/dogtrail-logo-458px.png" alt="Dogtrail">
+        </a>
+        <a href="https://happydog.fi/" target="_blank" rel="noopener">
+          <img src="https://www.ahteemu.fi/wp-content/uploads/2024/05/happydog-logo-458px.jpg" alt="Happy Dog">
+        </a>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- Card 7: Footer -->
+<div class="card-wrapper" id="wrapper-footer">
+  <section class="card cream card-footer" id="footer" data-card="6">
+    <div class="content" style="text-align:center; display:flex; flex-direction:column; align-items:center; gap:1.5rem;">
+      <img src="https://www.ahteemu.fi/wp-content/uploads/2024/03/ahteemu-logo-black.png" alt="Ahteemu" class="logo-img reveal-element">
+      <div class="social-links reveal-element">
+        <a href="https://facebook.com/ahteemu/" target="_blank" rel="noopener" aria-label="Facebook">
+          <svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+        </a>
+        <a href="https://instagram.com/ahteemu/" target="_blank" rel="noopener" aria-label="Instagram">
+          <svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.5" cy="6.5" r="1.2"/></svg>
+        </a>
+        <a href="https://x.com/ahteemu" target="_blank" rel="noopener" aria-label="X">
+          <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        </a>
+      </div>
+      <div class="footer-meta reveal-element">T:mi Ahteemu &middot; ahteemu.fi</div>
+    </div>
+  </section>
+</div>
+
+<script>
+(function() {
+  'use strict';
+
+  const cards = document.querySelectorAll('.card');
+  const wrappers = document.querySelectorAll('.card-wrapper');
+  const navbar = document.getElementById('navbar');
+  const navLogo = document.getElementById('navLogo');
+  const navLinks = document.querySelectorAll('[data-nav]');
+  const navToggle = document.getElementById('navToggle');
+  const navMobile = document.getElementById('navMobile');
+  const totalCards = cards.length;
+  let currentCard = 0;
+
+  // ── Scroll to card ──
+  function scrollToCard(index) {
+    if (index < 0 || index >= totalCards) return;
+    const wrapper = wrappers[index];
+    const top = wrapper.offsetTop;
+    window.scrollTo({ top: top, behavior: 'smooth' });
+  }
+  window.scrollToCard = scrollToCard;
+
+  // ── Determine active card from scroll position ──
+  function getActiveCard() {
+    const scrollY = window.scrollY;
+    const vh = window.innerHeight;
+    for (let i = wrappers.length - 1; i >= 0; i--) {
+      if (scrollY >= wrappers[i].offsetTop - vh * 0.4) {
+        return i;
+      }
+    }
+    return 0;
+  }
+
+  // ── Update navbar state ──
+  function updateNavbar() {
+    const active = getActiveCard();
+    currentCard = active;
+
+    // Show navbar after scrolling past first card
+    if (window.scrollY > window.innerHeight * 0.5) {
+      navbar.classList.add('visible');
+      navbar.classList.remove('at-top');
+    } else {
+      navbar.classList.remove('visible');
+    }
+
+    // Highlight active link
+    navLinks.forEach(link => {
+      const idx = parseInt(link.dataset.nav);
+      link.classList.toggle('active', idx === active);
+    });
+  }
+
+  // ── Click nav links ──
+  navLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const idx = parseInt(link.dataset.nav);
+      scrollToCard(idx);
+      // Close mobile menu
+      navMobile.classList.remove('open');
+      navToggle.classList.remove('open');
+    });
+  });
+
+  // ── Logo click → scroll to top ──
+  navLogo.addEventListener('click', (e) => {
+    e.stopPropagation();
+    scrollToCard(0);
+  });
+
+  // ── Hamburger toggle ──
+  navToggle.addEventListener('click', (e) => {
+    e.stopPropagation();
+    navToggle.classList.toggle('open');
+    navMobile.classList.toggle('open');
+  });
+
+  // ── Click card to advance ──
+  cards.forEach((card, i) => {
+    card.addEventListener('click', (e) => {
+      // Don't advance if clicking a link or button
+      if (e.target.closest('a, button')) return;
+      if (i < totalCards - 1) {
+        scrollToCard(i + 1);
+      }
+    });
+  });
+
+  // ── Keyboard navigation ──
+  document.addEventListener('keydown', (e) => {
+    const active = getActiveCard();
+    if (e.key === 'ArrowDown' || e.key === ' ' || e.key === 'PageDown') {
+      e.preventDefault();
+      if (active < totalCards - 1) scrollToCard(active + 1);
+    } else if (e.key === 'ArrowUp' || e.key === 'PageUp') {
+      e.preventDefault();
+      if (active > 0) scrollToCard(active - 1);
+    } else if (e.key === 'Home') {
+      e.preventDefault();
+      scrollToCard(0);
+    } else if (e.key === 'End') {
+      e.preventDefault();
+      scrollToCard(totalCards - 1);
+    }
+  });
+
+  // ── Scroll listener ──
+  let scrollTick = false;
+  window.addEventListener('scroll', () => {
+    if (!scrollTick) {
+      requestAnimationFrame(() => {
+        updateNavbar();
+        scrollTick = false;
+      });
+      scrollTick = true;
+    }
+  }, { passive: true });
+
+  // ── IntersectionObserver for reveal animations ──
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, {
+    threshold: 0.15,
+    rootMargin: '0px 0px -50px 0px'
+  });
+
+  document.querySelectorAll('.reveal-element').forEach(el => {
+    revealObserver.observe(el);
+  });
+
+  // ── Animated counters ──
+  const counterObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && !entry.target.dataset.counted) {
+        entry.target.dataset.counted = 'true';
+        animateCounter(entry.target);
+      }
+    });
+  }, { threshold: 0.3 });
+
+  document.querySelectorAll('.stat-number[data-target]').forEach(el => {
+    counterObserver.observe(el);
+  });
+
+  function animateCounter(el) {
+    const target = parseInt(el.dataset.target);
+    const prefix = el.dataset.prefix || '';
+    const duration = 2000;
+    const startTime = performance.now();
+    const format = (n) => n.toLocaleString('fi-FI');
+
+    function update(currentTime) {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      // Ease out cubic
+      const eased = 1 - Math.pow(1 - progress, 3);
+      const current = Math.floor(eased * target);
+      el.textContent = prefix + format(current);
+      if (progress < 1) {
+        requestAnimationFrame(update);
+      } else {
+        el.textContent = prefix + format(target);
+      }
+    }
+    requestAnimationFrame(update);
+  }
+
+  // ── Snap to nearest card when scrolling stops ──
+  let snapTimeout = null;
+  let lastScrollY = -1;
+
+  function snapToNearestCard() {
+    const scrollY = window.scrollY;
+    const vh = window.innerHeight;
+    let closestIndex = 0;
+    let closestDist = Infinity;
+
+    for (let i = 0; i < wrappers.length; i++) {
+      const wrapperTop = wrappers[i].offsetTop;
+      const dist = Math.abs(scrollY - wrapperTop);
+      if (dist < closestDist) {
+        closestDist = dist;
+        closestIndex = i;
+      }
+    }
+
+    // Only snap if not already at the right position (tolerance 5px)
+    const targetTop = wrappers[closestIndex].offsetTop;
+    if (Math.abs(scrollY - targetTop) > 5) {
+      window.scrollTo({ top: targetTop, behavior: 'smooth' });
+    }
+  }
+
+  window.addEventListener('scroll', () => {
+    // Don't snap on mobile (regular scroll-snap handles it)
+    if (window.innerWidth <= 600) return;
+
+    clearTimeout(snapTimeout);
+    snapTimeout = setTimeout(() => {
+      snapToNearestCard();
+    }, 120);
+  }, { passive: true });
+
+  // ── Initial state ──
+  updateNavbar();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ahteemu – Prototyyppien vertailu</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --red: #CC3444;
+            --black: #1f1f1f;
+            --white: #fafafa;
+            --card-bg: #f5f2ed;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: var(--card-bg);
+            color: var(--black);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 4rem 2rem;
+        }
+
+        .logo {
+            width: 120px;
+            margin-bottom: 1rem;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.5rem, 4vw, 2.2rem);
+            font-weight: 700;
+            margin-bottom: 0.4rem;
+        }
+
+        .subtitle {
+            font-size: 0.8rem;
+            font-weight: 300;
+            color: #888;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            margin-bottom: 3rem;
+        }
+
+        .versions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1000px;
+            width: 100%;
+        }
+
+        .version-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-decoration: none;
+            color: var(--black);
+            display: block;
+        }
+
+        .version-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+        }
+
+        .version-card .preview {
+            width: 100%;
+            height: 200px;
+            background: var(--black);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .version-card .preview iframe {
+            width: 200%;
+            height: 200%;
+            border: none;
+            transform: scale(0.5);
+            transform-origin: top left;
+            pointer-events: none;
+        }
+
+        .version-card .info {
+            padding: 1.5rem;
+        }
+
+        .version-card .version-tag {
+            display: inline-block;
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--red);
+            margin-bottom: 0.5rem;
+        }
+
+        .version-card h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.6rem;
+        }
+
+        .version-card p {
+            font-size: 0.8rem;
+            line-height: 1.6;
+            font-weight: 300;
+            color: #666;
+        }
+
+        .version-card .features {
+            margin-top: 1rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+        }
+
+        .version-card .feature {
+            font-size: 0.65rem;
+            font-weight: 500;
+            background: var(--card-bg);
+            padding: 0.3rem 0.6rem;
+            border-radius: 20px;
+            color: #555;
+        }
+
+        .open-btn {
+            display: inline-block;
+            margin-top: 1.2rem;
+            padding: 0.6rem 1.5rem;
+            background: var(--black);
+            color: white;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            transition: background 0.3s;
+        }
+
+        .version-card:hover .open-btn {
+            background: var(--red);
+        }
+
+        footer {
+            margin-top: 4rem;
+            font-size: 0.7rem;
+            color: #aaa;
+            letter-spacing: 0.1em;
+        }
+    </style>
+</head>
+<body>
+    <img class="logo" src="https://www.ahteemu.fi/wp-content/uploads/2024/03/ahteemu-logo-black.png" alt="Ahteemu">
+    <h1>Prototyypit</h1>
+    <p class="subtitle">Ulkoasuversioiden vertailu</p>
+
+    <div class="versions">
+
+        <a class="version-card" href="v1-erilliset-galleriat.html" target="_blank">
+            <div class="preview">
+                <iframe src="v1-erilliset-galleriat.html" loading="lazy" tabindex="-1"></iframe>
+            </div>
+            <div class="info">
+                <span class="version-tag">Versio 1</span>
+                <h2>Erilliset galleriat</h2>
+                <p>Jokaisen osion jälkeen erillinen koko ruudun levyinen kuvagalleria. Galleriat laajenevat hover-efektillä.</p>
+                <div class="features">
+                    <span class="feature">Scroll snap</span>
+                    <span class="feature">Erilliset galleriat</span>
+                    <span class="feature">Hover-laajennus</span>
+                    <span class="feature">Taitosviivat</span>
+                </div>
+                <div class="open-btn">Avaa</div>
+            </div>
+        </a>
+
+        <a class="version-card" href="v3-thumbnails-lightbox.html" target="_blank">
+            <div class="preview">
+                <iframe src="v3-thumbnails-lightbox.html" loading="lazy" tabindex="-1"></iframe>
+            </div>
+            <div class="info">
+                <span class="version-tag">Versio 3</span>
+                <h2>Thumbnailit + Lightbox</h2>
+                <p>Kuvat integroitu pieneksi riviksi jokaisen osion sisään. Klikkaamalla kuva avautuu lightboxiin animaatiolla suoraan thumbnailin kohdasta.</p>
+                <div class="features">
+                    <span class="feature">Scroll snap</span>
+                    <span class="feature">Yksi ruutu / osio</span>
+                    <span class="feature">Lightbox-animaatio</span>
+                    <span class="feature">Klikkaa eteenpäin</span>
+                    <span class="feature">Taitosviivat</span>
+                </div>
+                <div class="open-btn">Avaa</div>
+            </div>
+        </a>
+
+        <a class="version-card" href="v4-click-to-advance.html" target="_blank">
+            <div class="preview">
+                <iframe src="v4-click-to-advance.html" loading="lazy" tabindex="-1"></iframe>
+            </div>
+            <div class="info">
+                <span class="version-tag">Versio 4</span>
+                <h2>Klikkaa eteenpäin</h2>
+                <p>Koko korttia klikkaamalla siirrytään seuraavalle sivulle. Navigointipallot selkeämmät tummalla taustalla ja glow-efektillä.</p>
+                <div class="features">
+                    <span class="feature">Scroll snap</span>
+                    <span class="feature">Koko kortti klikattava</span>
+                    <span class="feature">Lightbox-animaatio</span>
+                    <span class="feature">Paremmat nav-pallot</span>
+                    <span class="feature">Taitosviivat</span>
+                </div>
+                <div class="open-btn">Avaa</div>
+            </div>
+        </a>
+
+        <a class="version-card" href="v5-editorial.html" target="_blank">
+            <div class="preview">
+                <iframe src="v5-editorial.html" loading="lazy" tabindex="-1"></iframe>
+            </div>
+            <div class="info">
+                <span class="version-tag">Versio 5 — Uusi</span>
+                <h2>Editorial Magazine</h2>
+                <p>Jaettu näyttö: iso elävä kuva toisella puolella, tyylikäs typografia toisella. Puolet vaihtuvat vuorotellen. Luksuslehden tunnelma.</p>
+                <div class="features">
+                    <span class="feature">Split-screen</span>
+                    <span class="feature">Isot kuvat</span>
+                    <span class="feature">Dramaattiset numerot</span>
+                    <span class="feature">Näppäimistönavigointi</span>
+                    <span class="feature">Tooltip nav-pallot</span>
+                </div>
+                <div class="open-btn">Avaa</div>
+            </div>
+        </a>
+
+        <a class="version-card" href="v6-horizontal.html" target="_blank">
+            <div class="preview">
+                <iframe src="v6-horizontal.html" loading="lazy" tabindex="-1"></iframe>
+            </div>
+            <div class="info">
+                <span class="version-tag">Versio 6 — Uusi</span>
+                <h2>Horizontal Panorama</h2>
+                <p>Sivusto scrollaa vaakasuunnassa kuin korttipakka pöydällä. Edistymispalkki alhaalla, navigointi vaakarivissä.</p>
+                <div class="features">
+                    <span class="feature">Vaakasuunta</span>
+                    <span class="feature">Progress bar</span>
+                    <span class="feature">Cinematic</span>
+                    <span class="feature">Pysty mobiilissa</span>
+                </div>
+                <div class="open-btn">Avaa</div>
+            </div>
+        </a>
+
+        <a class="version-card" href="v7-stacked-cards.html" target="_blank">
+            <div class="preview">
+                <iframe src="v7-stacked-cards.html" loading="lazy" tabindex="-1"></iframe>
+            </div>
+            <div class="info">
+                <span class="version-tag">Versio 7 — Uusi</span>
+                <h2>Stacked Cards</h2>
+                <p>Kortit pinossa päällekkäin. Skrollatessa kortti liukuu ylös ja paljastaa seuraavan alta. Fyysinen syvyysvaikutelma varjoilla.</p>
+                <div class="features">
+                    <span class="feature">Sticky-pino</span>
+                    <span class="feature">Syvyysvarjot</span>
+                    <span class="feature">Ei pieniä kuvia</span>
+                    <span class="feature">Näppäimistönav</span>
+                </div>
+                <div class="open-btn">Avaa</div>
+            </div>
+        </a>
+
+        <a class="version-card" href="v8-cinematic.html" target="_blank">
+            <div class="preview">
+                <iframe src="v8-cinematic.html" loading="lazy" tabindex="-1"></iframe>
+            </div>
+            <div class="info">
+                <span class="version-tag">Versio 8 — Uusi</span>
+                <h2>Cinematic Dark</h2>
+                <p>Kokomusta elokuvamainen estetiikka. Dramaattiset taustakuvat, huurrelasi-tekstipaneelit, otsikot animoituvat sana kerrallaan.</p>
+                <div class="features">
+                    <span class="feature">Dark mode</span>
+                    <span class="feature">Frosted glass</span>
+                    <span class="feature">Sana-animaatio</span>
+                    <span class="feature">Minimalistinen</span>
+                </div>
+                <div class="open-btn">Avaa</div>
+            </div>
+        </a>
+
+        <a class="version-card" href="v9-navbar.html" target="_blank">
+            <div class="preview">
+                <iframe src="v9-navbar.html" loading="lazy" tabindex="-1"></iframe>
+            </div>
+            <div class="info">
+                <span class="version-tag">Versio 9 — Uusi</span>
+                <h2>Navbar + Stacked Cards</h2>
+                <p>V7:n korttipinoefekti yhdistettynä yläpalkin navigaatioon. Navipalkki ilmestyy skrollatessa, piilossa logo-sivulla. Aktiivinen osio korostuu.</p>
+                <div class="features">
+                    <span class="feature">Navbar</span>
+                    <span class="feature">Sticky-pino</span>
+                    <span class="feature">Hamburger mobiilissa</span>
+                    <span class="feature">Aktiivinen linkki</span>
+                </div>
+                <div class="open-btn">Avaa</div>
+            </div>
+        </a>
+
+    </div>
+
+    <footer>Ahteemu – prototyyppivertailu</footer>
+</body>
+</html>
