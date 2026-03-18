@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="fi" style="scroll-snap-type: y mandatory;">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ahteemu — Teemu Ahtee</title>
+<meta name="description" content="Teemu Ahtee — juontaja, lentäjä, hevosvalmentaja. T:mi Ahteemu.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════
+   RESET & BASE
+   ══════════════════════════════════ */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #0a0a0a;
+  --red: #CC3444;
+  --white: #ffffff;
+  --glass-bg: rgba(255,255,255,0.04);
+  --glass-border: rgba(255,255,255,0.05);
+  --text-dim: rgba(255,255,255,0.7);
+  --font-heading: 'Playfair Display', Georgia, serif;
+  --font-body: 'Montserrat', Helvetica, Arial, sans-serif;
+  --timeline-width: 2px;
+  --dot-size: 14px;
+}
+
+html {
+  background: var(--bg);
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  font-weight: 300;
+  color: var(--white);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ══════════════════════════════════
+   SECTIONS
+   ══════════════════════════════════ */
+.section {
+  min-height: 100vh;
+  scroll-snap-align: start;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* ══════════════════════════════════
+   TIMELINE SPINE
+   ══════════════════════════════════ */
+.timeline-track {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: var(--timeline-width);
+  height: 100vh;
+  z-index: 50;
+  pointer-events: none;
+}
+
+.timeline-track::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255,255,255,0.06);
+}
+
+.timeline-progress {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 0%;
+  background: var(--red);
+  transition: height 0.15s ease-out;
+  box-shadow: 0 0 12px rgba(204,52,68,0.4);
+}
+
+/* Timeline milestone dots (fixed position markers) */
+.timeline-dot {
+  position: absolute;
+  left: 50%;
+  width: var(--dot-size);
+  height: var(--dot-size);
+  border-radius: 50%;
+  border: 2px solid var(--white);
+  background: var(--bg);
+  transform: translate(-50%, -50%);
+  z-index: 51;
+  transition: background 0.4s ease, box-shadow 0.4s ease, transform 0.4s ease;
+  pointer-events: none;
+}
+
+.timeline-dot.reached {
+  background: var(--red);
+  box-shadow: 0 0 16px rgba(204,52,68,0.6);
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { box-shadow: 0 0 8px rgba(204,52,68,0.4); }
+  50% { box-shadow: 0 0 20px rgba(204,52,68,0.7); }
+}
+
+/* ══════════════════════════════════
+   GLASS CARD
+   ══════════════════════════════════ */
+.glass-card {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  padding: 2.5rem;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* ══════════════════════════════════
+   TIMELINE LAYOUT (content rows)
+   ══════════════════════════════════ */
+.tl-row {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 60px 1fr;
+  align-items: center;
+  gap: 0;
+  padding: 0 2rem;
+}
+
+.tl-left {
+  justify-self: end;
+  padding-right: 2rem;
+}
+
+.tl-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.tl-right {
+  justify-self: start;
+  padding-left: 2rem;
+}
+
+/* Card content */
+.card-heading {
+  font-family: var(--font-heading);
+  font-size: clamp(1.8rem, 3vw, 2.4rem);
+  font-weight: 600;
+  margin-bottom: 1.2rem;
+  line-height: 1.2;
+}
+
+.card-text {
+  font-size: 0.95rem;
+  line-height: 1.8;
+  color: var(--text-dim);
+  margin-bottom: 1.5rem;
+}
+
+.card-stat {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  margin-top: 1rem;
+}
+
+.card-stat .stat-number {
+  font-size: clamp(2rem, 4vw, 3rem);
+  color: var(--red);
+  display: block;
+  line-height: 1;
+}
+
+.card-stat .stat-label {
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  margin-top: 0.3rem;
+  display: block;
+}
+
+/* Images in timeline */
+.tl-image {
+  width: 100%;
+  max-width: 480px;
+  border-radius: 12px;
+  object-fit: cover;
+  aspect-ratio: 16/10;
+  display: block;
+}
+
+/* ══════════════════════════════════
+   REVEAL ANIMATIONS
+   ══════════════════════════════════ */
+.reveal-left {
+  opacity: 0;
+  transform: translateX(-60px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.reveal-right {
+  opacity: 0;
+  transform: translateX(60px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.reveal-up {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.reveal-left.visible,
+.reveal-right.visible,
+.reveal-up.visible {
+  opacity: 1;
+  transform: translate(0, 0);
+}
+
+/* ══════════════════════════════════
+   HERO
+   ══════════════════════════════════ */
+.hero {
+  flex-direction: column;
+  gap: 1.5rem;
+  text-align: center;
+}
+
+.logo-hero {
+  width: clamp(160px, 22vw, 260px);
+  filter: brightness(0) invert(1);
+  margin-bottom: 0.5rem;
+}
+
+.hero-subtitle {
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: clamp(0.85rem, 1.4vw, 1.05rem);
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.hero-scroll-hint {
+  position: absolute;
+  bottom: 2.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  opacity: 0.4;
+  animation: float-hint 2.5s ease-in-out infinite;
+}
+
+.hero-scroll-hint span {
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.hero-scroll-hint svg {
+  width: 18px;
+  height: 18px;
+  fill: var(--white);
+}
+
+@keyframes float-hint {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(8px); }
+}
+
+/* ══════════════════════════════════
+   REFERENSSIT
+   ══════════════════════════════════ */
+.ref-card {
+  max-width: 700px;
+  width: 100%;
+}
+
+.ref-item {
+  padding: 1rem 0 1rem 1.5rem;
+  border-left: 3px solid var(--red);
+  margin-bottom: 1rem;
+}
+
+.ref-item:last-child { margin-bottom: 0; }
+
+.ref-title {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 1.05rem;
+  margin-bottom: 0.3rem;
+}
+
+.ref-desc {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  line-height: 1.6;
+}
+
+/* ══════════════════════════════════
+   FOOTER
+   ══════════════════════════════════ */
+.footer-inner {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+}
+
+.partner-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2.5rem;
+  flex-wrap: wrap;
+}
+
+.partner-row a {
+  display: inline-block;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  opacity: 0.5;
+}
+
+.partner-row a:hover {
+  opacity: 1;
+  transform: scale(1.05);
+}
+
+.partner-row img {
+  height: 40px;
+  width: auto;
+  filter: brightness(0) invert(1);
+  object-fit: contain;
+}
+
+.footer-divider {
+  width: 60px;
+  height: 1px;
+  background: rgba(255,255,255,0.15);
+}
+
+.footer-logo {
+  width: 120px;
+  filter: brightness(0) invert(1);
+}
+
+.social-links {
+  display: flex;
+  gap: 1.2rem;
+  align-items: center;
+}
+
+.social-links a {
+  color: var(--white);
+  opacity: 0.5;
+  transition: opacity 0.3s ease;
+}
+
+.social-links a:hover { opacity: 1; }
+
+.social-links svg {
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+}
+
+.footer-text {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  letter-spacing: 0.1em;
+}
+
+/* ══════════════════════════════════
+   NAV DOTS
+   ══════════════════════════════════ */
+.nav-dots {
+  position: fixed;
+  right: 1.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  z-index: 100;
+  padding: 12px 8px;
+  background: rgba(10,10,10,0.5);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,0.06);
+  opacity: 0.6;
+  transition: opacity 0.3s ease;
+}
+
+.nav-dots:hover { opacity: 1; }
+
+.nav-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.25);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.nav-dot:hover {
+  background: rgba(255,255,255,0.5);
+  transform: scale(1.4);
+}
+
+.nav-dot.active {
+  background: var(--red);
+  box-shadow: 0 0 8px rgba(204,52,68,0.5);
+}
+
+.nav-dot__label {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  color: var(--white);
+  pointer-events: none;
+}
+
+.nav-dots:hover .nav-dot:hover .nav-dot__label { opacity: 1; }
+
+/* ══════════════════════════════════
+   RESPONSIVE (<768px)
+   ══════════════════════════════════ */
+@media (max-width: 767px) {
+  .timeline-track {
+    left: 24px;
+    transform: none;
+  }
+
+  .timeline-dot {
+    left: 24px;
+  }
+
+  .tl-row {
+    grid-template-columns: 48px 1fr;
+    padding: 0 1.2rem;
+  }
+
+  .tl-center { display: none; }
+
+  .tl-left,
+  .tl-right {
+    grid-column: 2;
+    justify-self: start;
+    padding-left: 1rem;
+    padding-right: 0;
+  }
+
+  /* Stack image below card on mobile */
+  .tl-row .tl-left.tl-image-wrap,
+  .tl-row .tl-right.tl-image-wrap {
+    grid-column: 2;
+    margin-top: 1rem;
+  }
+
+  .section-content-grid {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding-left: 48px;
+    padding-right: 1.2rem;
+  }
+
+  .tl-image {
+    max-width: 100%;
+  }
+
+  .glass-card {
+    padding: 1.5rem;
+  }
+
+  .nav-dots {
+    right: 0.75rem;
+    padding: 8px 6px;
+    gap: 10px;
+  }
+
+  .nav-dot {
+    width: 6px;
+    height: 6px;
+  }
+
+  .nav-dot__label { display: none; }
+
+  .partner-row img { height: 30px; }
+}
+
+</style>
+</head>
+<body>
+
+<!-- ═══ NAV DOTS ═══ -->
+<nav class="nav-dots">
+  <div class="nav-dot active" data-index="0"><span class="nav-dot__label">Alku</span></div>
+  <div class="nav-dot" data-index="1"><span class="nav-dot__label">Juontaja</span></div>
+  <div class="nav-dot" data-index="2"><span class="nav-dot__label">Ilmailu</span></div>
+  <div class="nav-dot" data-index="3"><span class="nav-dot__label">Hevoset</span></div>
+  <div class="nav-dot" data-index="4"><span class="nav-dot__label">Referenssit</span></div>
+  <div class="nav-dot" data-index="5"><span class="nav-dot__label">Yhteystiedot</span></div>
+</nav>
+
+<!-- ═══ TIMELINE TRACK (fixed) ═══ -->
+<div class="timeline-track">
+  <div class="timeline-progress"></div>
+</div>
+
+<!-- ═══ TIMELINE DOTS (absolute, placed by JS) ═══ -->
+<div id="timeline-dots-container" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:51;"></div>
+
+
+<!-- ══════════════════════════════════════════
+     SECTION 1 — HERO
+     ══════════════════════════════════════════ -->
+<section class="section hero" data-section="0">
+  <img class="logo-hero reveal-up" src="https://www.ahteemu.fi/wp-content/uploads/2024/03/ahteemu-logo-black.png" alt="Ahteemu">
+  <p class="hero-subtitle reveal-up" style="transition-delay:0.15s;">Juontaja &middot; Lentäjä &middot; Hevosvalmentaja</p>
+  <div class="hero-scroll-hint">
+    <span>Selaa</span>
+    <svg viewBox="0 0 24 24"><path d="M12 16l-6-6h12z"/></svg>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════
+     SECTION 2 — JUONTAJA
+     ══════════════════════════════════════════ -->
+<section class="section" data-section="1">
+  <div class="tl-row">
+    <!-- LEFT: card -->
+    <div class="tl-left reveal-left">
+      <div class="glass-card">
+        <h2 class="card-heading">Juontaja</h2>
+        <p class="card-text">Laita käteeni mikrofoni, eteeni yleisö, olen kotonani. Vuosien varrella olen saanut juontaa tapahtumia seminaareista burleski-iltamiin, Olympiastadionilta TV-studioon, Helsingistä Ouluun, suomeksi ja englanniksi, myös på svenska.</p>
+        <div class="card-stat">
+          <span class="stat-number" data-count="100">0</span>
+          <span class="stat-label">Yli 100 juonnettua tapahtumaa</span>
+        </div>
+      </div>
+    </div>
+    <!-- CENTER: dot placeholder (visual only, real dot is fixed) -->
+    <div class="tl-center"></div>
+    <!-- RIGHT: image -->
+    <div class="tl-right reveal-right">
+      <img class="tl-image" src="https://www.ahteemu.fi/wp-content/uploads/2024/04/ahteemu-bg-1920x1080px-juontaja.jpg" alt="Teemu Ahtee juontajana" loading="lazy">
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════
+     SECTION 3 — ILMAILU
+     ══════════════════════════════════════════ -->
+<section class="section" data-section="2">
+  <div class="tl-row">
+    <!-- LEFT: image -->
+    <div class="tl-left reveal-left" style="justify-self:end;">
+      <img class="tl-image" src="https://www.ahteemu.fi/wp-content/uploads/2024/04/ahteemu-bg-1920x1080px-ilmailu.jpg" alt="Teemu Ahtee lentäjänä" loading="lazy">
+    </div>
+    <!-- CENTER -->
+    <div class="tl-center"></div>
+    <!-- RIGHT: card -->
+    <div class="tl-right reveal-right">
+      <div class="glass-card">
+        <h2 class="card-heading">Ilmailu</h2>
+        <p class="card-text">Lapsuuden haaveesta tuli totta ja pääsin unelma-ammattiini lentäjäksi. 25 vuoden ja yli 12 000 lentotunnin jälkeen on se sama pikkupoikamainen innostus tallella. Samalla maailma on pienentynyt. Tyynenmeren molemmat rannat, Pohjoisnapa, Grönlanti, Siperia, Gobin autiomaa.</p>
+        <div class="card-stat">
+          <span class="stat-number" data-count="12000">0</span>
+          <span class="stat-label">Yli 12 000 lentotuntia</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════
+     SECTION 4 — HEVOSET
+     ══════════════════════════════════════════ -->
+<section class="section" data-section="3">
+  <div class="tl-row">
+    <!-- LEFT: card -->
+    <div class="tl-left reveal-left">
+      <div class="glass-card">
+        <h2 class="card-heading">Hevoset</h2>
+        <p class="card-text">Hevosen lempeä katse, turvan pehmeä iho, tuttu hörähdys karsinasta. Tunne, jonka saa ollessaan hevosen kanssa, on sellainen, johon ei ikinä kyllästy.</p>
+        <p class="card-text">Valmentajana pyrin löytämään sinulle ja hevosellesi sopivan tavan oppia ja omaksua uutta. Kyselen, kuuntelen.</p>
+        <p class="card-text" style="margin-bottom:0;">Valmentaessani olen vaativa, mutta kannustava. Tarkka, mutta lempeä. Tosissani, mutten tosikkona.</p>
+      </div>
+    </div>
+    <!-- CENTER -->
+    <div class="tl-center"></div>
+    <!-- RIGHT: image -->
+    <div class="tl-right reveal-right">
+      <img class="tl-image" src="https://www.ahteemu.fi/wp-content/uploads/2024/04/ahteemu-bg-1920x1080px-hevoset.jpg" alt="Teemu Ahtee hevosvalmentajana" loading="lazy">
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════
+     SECTION 5 — REFERENSSIT
+     ══════════════════════════════════════════ -->
+<section class="section" data-section="4">
+  <div class="tl-row" style="display:flex; justify-content:center;">
+    <div class="ref-card glass-card reveal-up">
+      <h2 class="card-heading" style="text-align:center; margin-bottom:2rem;">Referenssit</h2>
+      <div class="ref-item">
+        <p class="ref-title">Helsinki International Horse Show</p>
+        <p class="ref-desc">Show-ohjelmien juontaminen vastuullani.</p>
+      </div>
+      <div class="ref-item">
+        <p class="ref-title">"Cityravit"</p>
+        <p class="ref-desc">Stadikalla 2013 &middot; Kaivarissa 2017 &middot; Lumiravit 2018 &middot; Bastionissa 2022&ndash;2023</p>
+      </div>
+      <div class="ref-item">
+        <p class="ref-title">Hevoset-messut</p>
+        <p class="ref-desc">Tampereella järjestettävät messut.</p>
+      </div>
+      <div class="ref-item">
+        <p class="ref-title">Kaviionjälkiä (Yle, TV2)</p>
+        <p class="ref-desc">Kuninkuusravien TV-ohjelman studio-osuudet.</p>
+      </div>
+      <div class="ref-item">
+        <p class="ref-title">Kavioliitossa-podcast</p>
+        <p class="ref-desc">&ldquo;Asiaa vain siteeksi&rdquo;.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════
+     SECTION 6 — FOOTER
+     ══════════════════════════════════════════ -->
+<section class="section" data-section="5">
+  <div class="footer-inner reveal-up">
+    <div class="partner-row">
+      <a href="https://www.backontrack.com" target="_blank" rel="noopener">
+        <img src="https://www.ahteemu.fi/wp-content/uploads/2024/04/Back-on-Track-logo-3.png" alt="Back on Track">
+      </a>
+      <a href="https://www.houseofhorseshelsinki.fi" target="_blank" rel="noopener">
+        <img src="https://www.ahteemu.fi/wp-content/uploads/2024/04/HHH-logo.png" alt="House of Horses Helsinki">
+      </a>
+      <a href="https://www.dogtrail.fi" target="_blank" rel="noopener">
+        <img src="https://www.ahteemu.fi/wp-content/uploads/2024/05/dogtrail-logo-458px.png" alt="Dog Trail">
+      </a>
+    </div>
+    <div class="footer-divider"></div>
+    <img class="footer-logo" src="https://www.ahteemu.fi/wp-content/uploads/2024/03/ahteemu-logo-black.png" alt="Ahteemu">
+    <div class="social-links">
+      <a href="https://facebook.com/ahteemu/" target="_blank" rel="noopener" aria-label="Facebook">
+        <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+      </a>
+      <a href="https://instagram.com/ahteemu/" target="_blank" rel="noopener" aria-label="Instagram">
+        <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+      </a>
+      <a href="https://x.com/ahteemu" target="_blank" rel="noopener" aria-label="X">
+        <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+      </a>
+    </div>
+    <p class="footer-text">T:mi Ahteemu</p>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════
+     JAVASCRIPT
+     ══════════════════════════════════════════ -->
+<script>
+(function() {
+  'use strict';
+
+  const sections = document.querySelectorAll('.section');
+  const navDots = document.querySelectorAll('.nav-dot');
+  const timelineProgress = document.querySelector('.timeline-progress');
+  const dotsContainer = document.getElementById('timeline-dots-container');
+  let currentIndex = 0;
+  let isScrolling = false;
+
+  // ── Create fixed timeline dots for each section ──
+  const dotPositions = []; // percentage positions for each dot
+  sections.forEach((_, i) => {
+    // Evenly distribute dots along the viewport height
+    const pct = (i / (sections.length - 1)) * 100;
+    dotPositions.push(pct);
+    const dot = document.createElement('div');
+    dot.className = 'timeline-dot';
+    dot.style.top = pct + '%';
+    dot.dataset.dotIndex = i;
+    dotsContainer.appendChild(dot);
+  });
+
+  // ── Scroll progress tracking ──
+  function updateTimeline() {
+    const scrollTop = window.scrollY || document.documentElement.scrollTop;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+
+    // Update the red progress line
+    timelineProgress.style.height = progress + '%';
+
+    // Update milestone dots
+    const timelineDots = dotsContainer.querySelectorAll('.timeline-dot');
+    timelineDots.forEach(dot => {
+      const dotPct = parseFloat(dot.style.top);
+      if (progress >= dotPct - 2) {
+        dot.classList.add('reached');
+      } else {
+        dot.classList.remove('reached');
+      }
+    });
+  }
+
+  // ── IntersectionObserver for reveal animations ──
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.15 });
+
+  document.querySelectorAll('.reveal-left, .reveal-right, .reveal-up').forEach(el => {
+    revealObserver.observe(el);
+  });
+
+  // ── Section tracking for nav dots & counters ──
+  const sectionObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const idx = parseInt(entry.target.dataset.section);
+        currentIndex = idx;
+        navDots.forEach(d => d.classList.remove('active'));
+        navDots[idx]?.classList.add('active');
+
+        // Trigger number counters in this section
+        entry.target.querySelectorAll('.stat-number[data-count]').forEach(el => {
+          if (!el.dataset.counted) {
+            animateCounter(el);
+            el.dataset.counted = 'true';
+          }
+        });
+      }
+    });
+  }, { threshold: 0.5 });
+
+  sections.forEach(s => sectionObserver.observe(s));
+
+  // ── Animated number counter ──
+  function animateCounter(el) {
+    const target = parseInt(el.dataset.count);
+    const duration = 1800;
+    const start = performance.now();
+
+    function tick(now) {
+      const elapsed = now - start;
+      const progress = Math.min(elapsed / duration, 1);
+      // Ease-out cubic
+      const ease = 1 - Math.pow(1 - progress, 3);
+      const current = Math.round(ease * target);
+      el.textContent = current.toLocaleString('fi-FI');
+      if (progress < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+
+  // ── Nav dot clicks ──
+  navDots.forEach(dot => {
+    dot.addEventListener('click', () => {
+      const idx = parseInt(dot.dataset.index);
+      sections[idx]?.scrollIntoView({ behavior: 'smooth' });
+    });
+  });
+
+  // ── Click to advance ──
+  document.addEventListener('click', (e) => {
+    if (e.target.closest('.nav-dots') || e.target.closest('a') || e.target.closest('button')) return;
+    const next = Math.min(currentIndex + 1, sections.length - 1);
+    if (next !== currentIndex) {
+      sections[next].scrollIntoView({ behavior: 'smooth' });
+    }
+  });
+
+  // ── Keyboard navigation ──
+  document.addEventListener('keydown', (e) => {
+    if (isScrolling) return;
+    let target = null;
+    if (e.key === 'ArrowDown' || e.key === ' ') {
+      e.preventDefault();
+      target = Math.min(currentIndex + 1, sections.length - 1);
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      target = Math.max(currentIndex - 1, 0);
+    }
+    if (target !== null && target !== currentIndex) {
+      isScrolling = true;
+      sections[target].scrollIntoView({ behavior: 'smooth' });
+      setTimeout(() => { isScrolling = false; }, 800);
+    }
+  });
+
+  // ── Scroll event for timeline ──
+  let ticking = false;
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      requestAnimationFrame(() => {
+        updateTimeline();
+        ticking = false;
+      });
+      ticking = true;
+    }
+  }, { passive: true });
+
+  // Initial state
+  updateTimeline();
+
+})();
+</script>
+
+</body>
+</html>

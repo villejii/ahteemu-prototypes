@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="fi" style="scroll-snap-type: y mandatory;">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ahteemu — Teemu Ahtee</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html {
+  overflow-x: hidden;
+  scroll-snap-type: y mandatory;
+  background: #1f1f1f;
+}
+
+body {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 300;
+  color: #1f1f1f;
+  background: #1f1f1f;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 { font-family: 'Playfair Display', serif; font-weight: 700; }
+
+.bento-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 12px;
+}
+
+/* ── Row base ── */
+.bento-row {
+  display: grid;
+  gap: 12px;
+  min-height: 100vh;
+  height: 100vh;
+  scroll-snap-align: start;
+  margin-bottom: 12px;
+}
+.bento-row:last-child { margin-bottom: 0; }
+
+/* ── Card base ── */
+.bento-card {
+  border-radius: 16px;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 3rem 2.5rem;
+  opacity: 0;
+  transform: translateY(40px) scale(0.97);
+  transition: opacity 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.bento-card.visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* ── Card variants ── */
+.card-cream {
+  background: #f5f2ed;
+  color: #1f1f1f;
+}
+.card-dark {
+  background: #2a2a2a;
+  color: #f5f2ed;
+}
+.card-image {
+  color: #f5f2ed;
+  background-size: cover;
+  background-position: center;
+}
+.card-image::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.65);
+  z-index: 1;
+}
+.card-image > * { position: relative; z-index: 2; }
+
+/* ── Row 1: Hero ── */
+.row-hero {
+  grid-template-columns: 1fr;
+}
+.hero-card {
+  text-align: center;
+  gap: 1.5rem;
+}
+.hero-card .logo-img {
+  width: min(280px, 60vw);
+  height: auto;
+  filter: none;
+}
+.hero-card .subtitle {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 300;
+  font-size: clamp(0.9rem, 2vw, 1.15rem);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #888;
+}
+
+/* ── Row 2: Juontaja ── */
+.row-juontaja {
+  grid-template-columns: 2fr 1fr;
+}
+.juontaja-image {
+  background-image: url('https://www.ahteemu.fi/wp-content/uploads/2024/04/ahteemu-bg-1920x1080px-juontaja.jpg');
+  align-items: flex-start;
+  justify-content: flex-end;
+  text-align: left;
+}
+.juontaja-image h2 {
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  margin-bottom: 1rem;
+}
+.juontaja-image p {
+  font-size: clamp(0.85rem, 1.3vw, 1rem);
+  max-width: 520px;
+  line-height: 1.7;
+}
+.stat-card {
+  text-align: center;
+  gap: 0.3rem;
+}
+.stat-number {
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  font-size: clamp(3rem, 6vw, 5rem);
+  color: #CC3444;
+  line-height: 1;
+}
+.stat-label {
+  font-size: clamp(0.8rem, 1.2vw, 1rem);
+  color: #666;
+  font-weight: 400;
+}
+
+/* ── Row 3: Ilmailu ── */
+.row-ilmailu {
+  grid-template-columns: 1fr 2fr;
+}
+.ilmailu-image {
+  background-image: url('https://www.ahteemu.fi/wp-content/uploads/2024/04/ahteemu-bg-1920x1080px-ilmailu.jpg');
+  align-items: flex-end;
+  justify-content: flex-end;
+  text-align: right;
+}
+.ilmailu-image h2 {
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  margin-bottom: 1rem;
+}
+.ilmailu-image p {
+  font-size: clamp(0.85rem, 1.3vw, 1rem);
+  max-width: 520px;
+  line-height: 1.7;
+}
+
+/* ── Row 4: Hevoset ── */
+.row-hevoset {
+  grid-template-columns: 1fr;
+}
+.hevoset-image {
+  background-image: url('https://www.ahteemu.fi/wp-content/uploads/2024/04/ahteemu-bg-1920x1080px-hevoset.jpg');
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5rem;
+}
+.hevoset-image h2 {
+  font-size: clamp(2rem, 4vw, 3.5rem);
+}
+.hevoset-image p {
+  font-size: clamp(0.85rem, 1.3vw, 1rem);
+  max-width: 600px;
+  line-height: 1.8;
+}
+
+/* ── Row 5: Referenssit ── */
+.row-referenssit {
+  grid-template-columns: 1fr 1fr 1fr;
+}
+.ref-card {
+  border-top: 4px solid #CC3444;
+  justify-content: flex-start;
+  align-items: flex-start;
+  text-align: left;
+  gap: 1.2rem;
+  padding: 2rem 1.8rem;
+  overflow-y: auto;
+}
+.ref-card h3 {
+  font-size: clamp(1rem, 1.4vw, 1.2rem);
+  color: #1f1f1f;
+}
+.ref-card p {
+  font-size: clamp(0.8rem, 1.1vw, 0.9rem);
+  color: #555;
+  line-height: 1.6;
+}
+.ref-item + .ref-item {
+  padding-top: 1.2rem;
+  border-top: 1px solid #e0dcd6;
+}
+
+/* ── Row 6: Partners + Footer ── */
+.row-footer {
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr 1fr;
+}
+.partners-card {
+  text-align: center;
+  gap: 2rem;
+}
+.partners-card h2 {
+  font-size: clamp(1.4rem, 2.5vw, 2rem);
+  color: #f5f2ed;
+}
+.partner-grid {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3rem;
+  flex-wrap: wrap;
+}
+.partner-grid a {
+  display: block;
+  opacity: 0.7;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.partner-grid a:hover {
+  opacity: 1;
+  transform: scale(1.05);
+}
+.partner-grid img {
+  height: 46px;
+  width: auto;
+  filter: brightness(0) invert(1);
+  object-fit: contain;
+}
+.footer-card {
+  text-align: center;
+  gap: 1.2rem;
+}
+.footer-card .logo-img {
+  width: 160px;
+  height: auto;
+}
+.social-links {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+}
+.social-links a {
+  color: #1f1f1f;
+  width: 26px;
+  height: 26px;
+  display: block;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+.social-links a:hover {
+  color: #CC3444;
+  transform: scale(1.15);
+}
+.social-links svg {
+  width: 100%;
+  height: 100%;
+  fill: currentColor;
+}
+.footer-meta {
+  font-size: 0.85rem;
+  color: #888;
+  font-weight: 400;
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .bento-row {
+    min-height: 100vh;
+    height: auto;
+  }
+
+  .row-juontaja {
+    grid-template-columns: 1fr;
+    grid-template-rows: 2fr 1fr;
+  }
+  .row-ilmailu {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 2fr;
+  }
+  .row-ilmailu .stat-card { order: -1; }
+
+  .row-referenssit {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+  }
+
+  .row-footer {
+    grid-template-rows: 1fr 1fr;
+  }
+
+  .bento-card { padding: 2rem 1.5rem; }
+
+  .juontaja-image,
+  .ilmailu-image {
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .stat-number { font-size: clamp(2.5rem, 12vw, 4rem); }
+
+  .partner-grid { gap: 2rem; }
+  .partner-grid img { height: 34px; }
+}
+
+@media (max-width: 480px) {
+  .hero-card .logo-img { width: 200px; }
+  .bento-card { padding: 1.5rem 1.2rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="bento-container">
+
+  <!-- Row 1: Hero -->
+  <div class="bento-row row-hero">
+    <div class="bento-card card-cream hero-card">
+      <img src="https://www.ahteemu.fi/wp-content/uploads/2024/03/ahteemu-logo-black.png" alt="Ahteemu" class="logo-img">
+      <div class="subtitle">Juontaja &middot; Lent&auml;j&auml; &middot; Hevosvalmentaja</div>
+    </div>
+  </div>
+
+  <!-- Row 2: Juontaja -->
+  <div class="bento-row row-juontaja">
+    <div class="bento-card card-image juontaja-image">
+      <h2>Juontaja</h2>
+      <p>Laita k&auml;teeni mikrofoni, eteeni yleis&ouml;, olen kotonani. Vuosien varrella olen saanut juontaa tapahtumia seminaareista burleski-iltamiin, Olympiastadionilta TV-studioon, Helsingist&auml; Ouluun, suomeksi ja englanniksi, my&ouml;s p&aring; svenska.</p>
+    </div>
+    <div class="bento-card card-cream stat-card">
+      <div class="stat-number" data-target="100" data-suffix="+">0</div>
+      <div class="stat-label">juonnettua tapahtumaa</div>
+    </div>
+  </div>
+
+  <!-- Row 3: Ilmailu -->
+  <div class="bento-row row-ilmailu">
+    <div class="bento-card card-cream stat-card">
+      <div class="stat-number" data-target="12000" data-suffix="+">0</div>
+      <div class="stat-label">lentotuntia</div>
+    </div>
+    <div class="bento-card card-image ilmailu-image">
+      <h2>Ilmailu</h2>
+      <p>Lapsuuden haaveesta tuli totta ja p&auml;&auml;sin unelma-ammattiini lent&auml;j&auml;ksi. 25 vuoden ja yli 12&nbsp;000 lentotunnin j&auml;lkeen on se sama pikkupoikamainen innostus tallella. Samalla maailma on pienentynyt. Tyynenmeren molemmat rannat, Pohjoisnapa, Gr&ouml;nlanti, Siperia, Gobin autiomaa.</p>
+    </div>
+  </div>
+
+  <!-- Row 4: Hevoset -->
+  <div class="bento-row row-hevoset">
+    <div class="bento-card card-image hevoset-image">
+      <h2>Hevoset</h2>
+      <p>Hevosen lempe&auml; katse, turvan pehme&auml; iho, tuttu h&ouml;r&auml;hdys karsinasta. Tunne, jonka saa ollessaan hevosen kanssa, on sellainen, johon ei ikin&auml; kyll&auml;sty.</p>
+      <p>Valmentaessani olen vaativa, mutta kannustava. Tarkka, mutta lempe&auml;. Tosissani, mutten tosikkona.</p>
+    </div>
+  </div>
+
+  <!-- Row 5: Referenssit -->
+  <div class="bento-row row-referenssit">
+    <div class="bento-card card-cream ref-card">
+      <div class="ref-item">
+        <h3>Helsinki International Horse Show</h3>
+        <p>Suomen suurin ratsastustapahtuma. Show-ohjelmien juontaminen vastuullani.</p>
+      </div>
+      <div class="ref-item">
+        <h3>&ldquo;Cityravit&rdquo;</h3>
+        <p>Hevosurheilu kaupunkien keskustoihin. Stadikalla 2013 &middot; Kaivarissa 2017 &middot; Bastionissa 2022&ndash;2023</p>
+      </div>
+    </div>
+    <div class="bento-card card-cream ref-card">
+      <div class="ref-item">
+        <h3>Hevoset-messut</h3>
+        <p>Tampereella j&auml;rjestett&auml;v&auml;t messut.</p>
+      </div>
+      <div class="ref-item">
+        <h3>Kavioonj&auml;lki&auml; (Yle, TV2)</h3>
+        <p>Kuninkuusravien TV-ohjelman studio-osuudet.</p>
+      </div>
+    </div>
+    <div class="bento-card card-cream ref-card">
+      <div class="ref-item">
+        <h3>Kavioliitossa-podcast</h3>
+        <p>&ldquo;Asiaa vain siteeksi.&rdquo;</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Row 6: Partners + Footer -->
+  <div class="bento-row row-footer">
+    <div class="bento-card card-dark partners-card">
+      <h2>Yhteisty&ouml;kumppanit</h2>
+      <div class="partner-grid">
+        <a href="https://backontrack.fi/" target="_blank" rel="noopener">
+          <img src="https://www.ahteemu.fi/wp-content/uploads/2024/04/Back-on-Track-logo-3.png" alt="Back on Track">
+        </a>
+        <a href="https://houseofhorseshelsinki.com/fi" target="_blank" rel="noopener">
+          <img src="https://www.ahteemu.fi/wp-content/uploads/2024/04/HHH-logo.png" alt="House of Horses Helsinki">
+        </a>
+        <a href="https://dogtrail.fi/" target="_blank" rel="noopener">
+          <img src="https://www.ahteemu.fi/wp-content/uploads/2024/05/dogtrail-logo-458px.png" alt="Dogtrail">
+        </a>
+        <a href="https://happydog.fi/" target="_blank" rel="noopener">
+          <img src="https://www.ahteemu.fi/wp-content/uploads/2024/05/happydog-logo-458px.jpg" alt="Happy Dog">
+        </a>
+      </div>
+    </div>
+    <div class="bento-card card-cream footer-card">
+      <img src="https://www.ahteemu.fi/wp-content/uploads/2024/03/ahteemu-logo-black.png" alt="Ahteemu" class="logo-img">
+      <div class="social-links">
+        <a href="https://facebook.com/ahteemu/" target="_blank" rel="noopener" aria-label="Facebook">
+          <svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+        </a>
+        <a href="https://instagram.com/ahteemu/" target="_blank" rel="noopener" aria-label="Instagram">
+          <svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.5" cy="6.5" r="1.2"/></svg>
+        </a>
+        <a href="https://x.com/ahteemu" target="_blank" rel="noopener" aria-label="X">
+          <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        </a>
+      </div>
+      <div class="footer-meta">T:mi Ahteemu &middot; ahteemu.fi</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+(function() {
+  'use strict';
+
+  // ── IntersectionObserver: staggered card reveal ──
+  const cards = document.querySelectorAll('.bento-card');
+
+  const observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        const card = entry.target;
+        const row = card.parentElement;
+        const siblings = Array.from(row.querySelectorAll('.bento-card'));
+        const index = siblings.indexOf(card);
+        const delay = index * 120;
+
+        setTimeout(function() {
+          card.classList.add('visible');
+          // Trigger counter if card contains stat
+          const counter = card.querySelector('.stat-number[data-target]');
+          if (counter && !counter.dataset.counted) {
+            counter.dataset.counted = 'true';
+            animateCounter(counter);
+          }
+        }, delay);
+
+        observer.unobserve(card);
+      }
+    });
+  }, { threshold: 0.15 });
+
+  cards.forEach(function(card) {
+    observer.observe(card);
+  });
+
+  // ── Animated number counters ──
+  function animateCounter(el) {
+    var target = parseInt(el.dataset.target, 10);
+    var suffix = el.dataset.suffix || '';
+    var duration = 1800;
+    var start = 0;
+    var startTime = null;
+
+    function easeOut(t) {
+      return 1 - Math.pow(1 - t, 3);
+    }
+
+    function step(timestamp) {
+      if (!startTime) startTime = timestamp;
+      var progress = Math.min((timestamp - startTime) / duration, 1);
+      var easedProgress = easeOut(progress);
+      var current = Math.floor(easedProgress * target);
+
+      if (target >= 1000) {
+        el.textContent = current.toLocaleString('fi-FI') + suffix;
+      } else {
+        el.textContent = current + suffix;
+      }
+
+      if (progress < 1) {
+        requestAnimationFrame(step);
+      } else {
+        if (target >= 1000) {
+          el.textContent = target.toLocaleString('fi-FI') + suffix;
+        } else {
+          el.textContent = target + suffix;
+        }
+      }
+    }
+
+    requestAnimationFrame(step);
+  }
+
+  // ── Click anywhere to scroll to next row ──
+  var rows = document.querySelectorAll('.bento-row');
+
+  function getCurrentRowIndex() {
+    var scrollY = window.scrollY;
+    var vh = window.innerHeight;
+    for (var i = rows.length - 1; i >= 0; i--) {
+      if (scrollY >= rows[i].offsetTop - vh * 0.5) {
+        return i;
+      }
+    }
+    return 0;
+  }
+
+  document.addEventListener('click', function(e) {
+    // Don't intercept link / button clicks
+    if (e.target.closest('a, button')) return;
+
+    var currentIndex = getCurrentRowIndex();
+    var nextIndex = currentIndex + 1;
+    if (nextIndex >= rows.length) nextIndex = 0;
+
+    rows[nextIndex].scrollIntoView({ behavior: 'smooth' });
+  });
+
+})();
+</script>
+
+</body>
+</html>

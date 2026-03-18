@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Teemu Ahtee — Juontaja · Lentäjä · Hevosvalmentaja</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: #f5f2ed;
+  color: #2a2a2a;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 300;
+  line-height: 1.8;
+  font-size: 17px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Sticky header */
+.sticky-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 56px;
+  background: rgba(245, 242, 237, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  z-index: 1000;
+  transform: translateY(-100%);
+  transition: transform 0.4s cubic-bezier(0.33, 1, 0.68, 1);
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+}
+
+.sticky-header.visible {
+  transform: translateY(0);
+}
+
+.sticky-header .header-logo img {
+  height: 30px;
+  width: auto;
+}
+
+.sticky-header .header-socials {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.sticky-header .header-socials a {
+  color: #2a2a2a;
+  transition: color 0.3s;
+}
+
+.sticky-header .header-socials a:hover {
+  color: #CC3444;
+}
+
+.sticky-header .header-socials svg {
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+}
+
+/* Content container */
+.content {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* Hero */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 80px 24px;
+}
+
+.hero-logo img {
+  width: 200px;
+  height: auto;
+  margin-bottom: 48px;
+}
+
+.hero-subtitle {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: #777;
+}
+
+/* Sections */
+.story-section {
+  padding: 15vh 0;
+}
+
+/* Pull quotes */
+.pull-quote {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: clamp(2rem, 5vw, 4rem);
+  line-height: 1.25;
+  color: #1a1a1a;
+  margin-bottom: 48px;
+  text-align: center;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Body text */
+.story-body {
+  font-size: 17px;
+  line-height: 1.9;
+  color: #3a3a3a;
+  margin-bottom: 48px;
+}
+
+.story-body p + p {
+  margin-top: 1.5em;
+}
+
+/* Polaroid images */
+.polaroid-wrap {
+  display: flex;
+  justify-content: center;
+  margin: 56px 0;
+}
+
+.polaroid {
+  background: #fff;
+  padding: 12px 12px 40px 12px;
+  max-width: 80%;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.06);
+  transition: transform 0.4s ease;
+}
+
+.polaroid img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.polaroid.rot-neg {
+  transform: rotate(-2.5deg);
+}
+
+.polaroid.rot-pos {
+  transform: rotate(2deg);
+}
+
+.polaroid.rot-neg2 {
+  transform: rotate(-1.5deg);
+}
+
+/* Inline stats */
+.inline-stat {
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  text-align: center;
+  margin: 48px 0;
+}
+
+.inline-stat .stat-number {
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  color: #CC3444;
+  display: block;
+  line-height: 1.1;
+}
+
+.inline-stat .stat-label {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 300;
+  font-size: 15px;
+  color: #777;
+  letter-spacing: 0.05em;
+  margin-top: 8px;
+  display: block;
+}
+
+/* References */
+.ref-heading {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 56px;
+  color: #1a1a1a;
+}
+
+.ref-item {
+  margin-bottom: 32px;
+}
+
+.ref-item .ref-title {
+  font-family: 'Playfair Display', serif;
+  font-weight: 600;
+  font-size: 20px;
+  color: #1a1a1a;
+  margin-bottom: 6px;
+}
+
+.ref-item .ref-desc {
+  font-size: 16px;
+  color: #555;
+  line-height: 1.7;
+}
+
+.ref-divider {
+  border: none;
+  height: 1px;
+  background: #CC3444;
+  opacity: 0.3;
+  margin: 32px auto;
+  width: 80px;
+}
+
+/* Partners */
+.partners-heading {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 48px;
+  color: #1a1a1a;
+}
+
+.partners-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 36px;
+}
+
+.partners-row a {
+  display: block;
+  transition: opacity 0.3s;
+}
+
+.partners-row a:hover {
+  opacity: 0.7;
+}
+
+.partners-row img {
+  height: 50px;
+  width: auto;
+  filter: grayscale(100%);
+  opacity: 0.6;
+  transition: all 0.3s;
+}
+
+.partners-row a:hover img {
+  filter: grayscale(0%);
+  opacity: 1;
+}
+
+/* Footer */
+.site-footer {
+  text-align: center;
+  padding: 12vh 24px 8vh;
+  border-top: 1px solid rgba(0,0,0,0.06);
+  margin-top: 10vh;
+}
+
+.footer-logo img {
+  width: 120px;
+  height: auto;
+  margin-bottom: 28px;
+}
+
+.footer-socials {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin-bottom: 28px;
+}
+
+.footer-socials a {
+  color: #2a2a2a;
+  transition: color 0.3s;
+}
+
+.footer-socials a:hover {
+  color: #CC3444;
+}
+
+.footer-socials svg {
+  width: 22px;
+  height: 22px;
+  fill: currentColor;
+}
+
+.footer-business {
+  font-size: 13px;
+  color: #999;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+/* Back to top */
+.back-to-top {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 40px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 400;
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #999;
+  text-decoration: none;
+  transition: color 0.3s;
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+.back-to-top:hover {
+  color: #CC3444;
+}
+
+.back-to-top svg {
+  width: 14px;
+  height: 14px;
+  fill: currentColor;
+}
+
+/* Scroll reveal */
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.8s cubic-bezier(0.33, 1, 0.68, 1), transform 0.8s cubic-bezier(0.33, 1, 0.68, 1);
+}
+
+.reveal.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  body {
+    font-size: 16px;
+  }
+
+  .hero-logo img {
+    width: 150px;
+  }
+
+  .story-section {
+    padding: 10vh 0;
+  }
+
+  .polaroid {
+    max-width: 95%;
+    padding: 8px 8px 28px 8px;
+  }
+
+  .pull-quote {
+    margin-bottom: 32px;
+  }
+
+  .partners-row img {
+    height: 36px;
+  }
+
+  .partners-row {
+    gap: 24px;
+  }
+
+  .sticky-header {
+    padding: 0 16px;
+  }
+}
+</style>
+</head>
+<body id="top">
+
+<!-- Sticky Header -->
+<header class="sticky-header" id="stickyHeader">
+  <a href="#top" class="header-logo">
+    <img src="https://www.ahteemu.fi/wp-content/uploads/2024/03/ahteemu-logo-black.png" alt="Ahteemu">
+  </a>
+  <nav class="header-socials">
+    <a href="https://www.facebook.com/ahteemu/" target="_blank" rel="noopener" aria-label="Facebook">
+      <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+    </a>
+    <a href="https://www.instagram.com/ahteemu/" target="_blank" rel="noopener" aria-label="Instagram">
+      <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+    </a>
+    <a href="https://x.com/ahteemu" target="_blank" rel="noopener" aria-label="X">
+      <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+    </a>
+  </nav>
+</header>
+
+<!-- Hero -->
+<section class="hero" id="hero">
+  <div class="hero-logo">
+    <img src="https://www.ahteemu.fi/wp-content/uploads/2024/03/ahteemu-logo-black.png" alt="Ahteemu">
+  </div>
+  <p class="hero-subtitle">Juontaja &middot; Lentäjä &middot; Hevosvalmentaja</p>
+</section>
+
+<!-- Main content -->
+<main class="content">
+
+  <!-- Juontaja -->
+  <section class="story-section">
+    <p class="pull-quote reveal">&ldquo;Laita käteeni mikrofoni, eteeni yleisö, olen kotonani.&rdquo;</p>
+    <div class="story-body reveal">
+      <p>Vuosien varrella olen saanut juontaa tapahtumia seminaareista burleski-iltamiin, Olympiastadionilta TV-studioon, Helsingistä Ouluun, suomeksi ja englanniksi, myös på svenska.</p>
+    </div>
+    <div class="polaroid-wrap reveal">
+      <div class="polaroid rot-neg">
+        <img src="https://www.ahteemu.fi/wp-content/uploads/2024/04/ahteemu-bg-1920x1080px-juontaja.jpg" alt="Teemu Ahtee juontajana">
+      </div>
+    </div>
+    <div class="inline-stat reveal">
+      <span class="stat-number">100+</span>
+      <span class="stat-label">juonnettua tapahtumaa</span>
+    </div>
+  </section>
+
+  <!-- Ilmailu -->
+  <section class="story-section">
+    <p class="pull-quote reveal">&ldquo;Lapsuuden haaveesta tuli totta ja pääsin unelma-ammattiini lentäjäksi.&rdquo;</p>
+    <div class="story-body reveal">
+      <p>25 vuoden ja yli 12&nbsp;000 lentotunnin jälkeen on se sama pikkupoikamainen innostus tallella. Samalla maailma on pienentynyt. Tyynenmeren molemmat rannat, Pohjoisnapa, Grönlanti, Siperia, Gobin autiomaa. Kuulostavat kaukaisilta ja saavuttamattomilta kohteilta. Onnekseni olen ne kaikki päässyt näkemään maisemakonttorini ikkunoista.</p>
+    </div>
+    <div class="polaroid-wrap reveal">
+      <div class="polaroid rot-pos">
+        <img src="https://www.ahteemu.fi/wp-content/uploads/2024/04/ahteemu-bg-1920x1080px-ilmailu.jpg" alt="Teemu Ahtee lentäjänä">
+      </div>
+    </div>
+    <div class="inline-stat reveal">
+      <span class="stat-number">12 000+</span>
+      <span class="stat-label">lentotuntia</span>
+    </div>
+  </section>
+
+  <!-- Hevoset -->
+  <section class="story-section">
+    <p class="pull-quote reveal">&ldquo;Hevosen lempeä katse, turvan pehmeä iho, tuttu hörähdys karsinasta.&rdquo;</p>
+    <div class="story-body reveal">
+      <p>Tunne, jonka saa ollessaan hevosen kanssa, on sellainen, johon ei ikinä kyllästy. Turpaterapiaa, sitä hevosen kanssa oleminen kirjaimellisesti on.</p>
+      <p>Valmentajana pyrin löytämään sinulle ja hevosellesi sopivan tavan oppia ja omaksua uutta. Kyselen, kuuntelen. Tasollasi ei ole merkitystä.</p>
+      <p>Valmentaessani olen vaativa, mutta kannustava. Tarkka, mutta lempeä. Tosissani, mutten tosikkona.</p>
+    </div>
+    <div class="polaroid-wrap reveal">
+      <div class="polaroid rot-neg2">
+        <img src="https://www.ahteemu.fi/wp-content/uploads/2024/04/ahteemu-bg-1920x1080px-hevoset.jpg" alt="Teemu Ahtee hevosvalmentajana">
+      </div>
+    </div>
+  </section>
+
+  <!-- Referenssit -->
+  <section class="story-section">
+    <h2 class="ref-heading reveal">Referenssit</h2>
+
+    <div class="ref-item reveal">
+      <p class="ref-title">Helsinki International Horse Show</p>
+      <p class="ref-desc">Suomen suurin ratsastustapahtuma. Show-ohjelmien juontaminen vastuullani.</p>
+    </div>
+    <hr class="ref-divider">
+
+    <div class="ref-item reveal">
+      <p class="ref-title">&ldquo;Cityravit&rdquo;</p>
+      <p class="ref-desc">Hevosurheilu kaupunkien keskustoihin. Stadikalla 2013 &middot; Kaivarissa 2017 &middot; Lumiravit 2018 &middot; Bastionissa 2022&ndash;2023</p>
+    </div>
+    <hr class="ref-divider">
+
+    <div class="ref-item reveal">
+      <p class="ref-title">Hevoset-messut</p>
+      <p class="ref-desc">Tampereella järjestettävät hevosharrastajille suunnatut messut.</p>
+    </div>
+    <hr class="ref-divider">
+
+    <div class="ref-item reveal">
+      <p class="ref-title">Kaviionjälkiä (Yle Areena, TV2)</p>
+      <p class="ref-desc">Kuninkuusravien TV-ohjelman studio-osuudet.</p>
+    </div>
+    <hr class="ref-divider">
+
+    <div class="ref-item reveal">
+      <p class="ref-title">Kavioliitossa-podcast</p>
+      <p class="ref-desc">Podcast-sarja Katja Stählin kanssa. &ldquo;Asiaa vain siteeksi&rdquo;.</p>
+    </div>
+  </section>
+
+  <!-- Yhteistyökumppanit -->
+  <section class="story-section">
+    <h2 class="partners-heading reveal">Yhteistyökumppanit</h2>
+    <div class="partners-row reveal">
+      <a href="https://www.backontrack.fi" target="_blank" rel="noopener">
+        <img src="https://www.ahteemu.fi/wp-content/uploads/2024/04/Back-on-Track-logo-3.png" alt="Back on Track">
+      </a>
+      <a href="https://www.houseofhorseshelsinki.com/fi" target="_blank" rel="noopener">
+        <img src="https://www.ahteemu.fi/wp-content/uploads/2024/04/HHH-logo.png" alt="House of Horses Helsinki">
+      </a>
+      <a href="https://www.dogtrail.fi" target="_blank" rel="noopener">
+        <img src="https://www.ahteemu.fi/wp-content/uploads/2024/05/dogtrail-logo-458px.png" alt="Dogtrail">
+      </a>
+      <a href="https://www.happydog.fi" target="_blank" rel="noopener">
+        <img src="https://www.ahteemu.fi/wp-content/uploads/2024/05/happydog-logo-458px.jpg" alt="Happy Dog">
+      </a>
+    </div>
+  </section>
+
+</main>
+
+<!-- Footer -->
+<footer class="site-footer">
+  <div class="footer-logo">
+    <img src="https://www.ahteemu.fi/wp-content/uploads/2024/03/ahteemu-logo-black.png" alt="Ahteemu">
+  </div>
+  <div class="footer-socials">
+    <a href="https://www.facebook.com/ahteemu/" target="_blank" rel="noopener" aria-label="Facebook">
+      <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+    </a>
+    <a href="https://www.instagram.com/ahteemu/" target="_blank" rel="noopener" aria-label="Instagram">
+      <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+    </a>
+    <a href="https://x.com/ahteemu" target="_blank" rel="noopener" aria-label="X">
+      <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+    </a>
+  </div>
+  <p class="footer-business">T:mi Ahteemu</p>
+  <a href="#top" class="back-to-top">
+    <svg viewBox="0 0 24 24"><path d="M12 4l-8 8h5v8h6v-8h5z"/></svg>
+    Takaisin ylös
+  </a>
+</footer>
+
+<script>
+// Sticky header show/hide
+const stickyHeader = document.getElementById('stickyHeader');
+const hero = document.getElementById('hero');
+
+function checkHeader() {
+  const heroBottom = hero.getBoundingClientRect().bottom;
+  if (heroBottom < 0) {
+    stickyHeader.classList.add('visible');
+  } else {
+    stickyHeader.classList.remove('visible');
+  }
+}
+
+window.addEventListener('scroll', checkHeader, { passive: true });
+
+// Scroll reveal with IntersectionObserver
+const revealElements = document.querySelectorAll('.reveal');
+
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('revealed');
+      revealObserver.unobserve(entry.target);
+    }
+  });
+}, {
+  threshold: 0.15,
+  rootMargin: '0px 0px -60px 0px'
+});
+
+revealElements.forEach(el => revealObserver.observe(el));
+</script>
+</body>
+</html>
