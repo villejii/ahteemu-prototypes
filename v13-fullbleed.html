@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="fi" style="scroll-snap-type: y mandatory; scroll-behavior: smooth;">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ahteemu — Teemu Ahtee</title>
+<meta name="description" content="Teemu Ahtee — juontaja, lentäjä, hevosvalmentaja. T:mi Ahteemu.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════
+   RESET & BASE
+   ══════════════════════════════════ */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #0a0a0a;
+  --red: #CC3444;
+  --white: #ffffff;
+  --text-dim: rgba(255,255,255,0.85);
+  --font-heading: 'Playfair Display', Georgia, serif;
+  --font-body: 'Montserrat', Helvetica, Arial, sans-serif;
+}
+
+html {
+  background: var(--bg);
+}
+
+body {
+  font-family: var(--font-body);
+  font-weight: 300;
+  color: var(--white);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  cursor: pointer;
+}
+
+/* ══════════════════════════════════
+   SECTIONS
+   ══════════════════════════════════ */
+.section {
+  height: 100vh;
+  scroll-snap-align: start;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* ══════════════════════════════════
+   BACKGROUND IMAGES — FULL BLEED
+   ══════════════════════════════════ */
+.section-bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  z-index: 1;
+}
+
+.section-bg.juontaja {
+  background-image: url('https://www.ahteemu.fi/wp-content/uploads/2024/04/ahteemu-bg-1920x1080px-juontaja.jpg');
+  filter: brightness(0.6);
+}
+
+.section-bg.ilmailu {
+  background-image: url('https://www.ahteemu.fi/wp-content/uploads/2024/04/ahteemu-bg-1920x1080px-ilmailu.jpg');
+  filter: brightness(0.55);
+}
+
+.section-bg.hevoset {
+  background-image: url('https://www.ahteemu.fi/wp-content/uploads/2024/04/ahteemu-bg-1920x1080px-hevoset.jpg');
+  filter: brightness(0.6);
+}
+
+/* ══════════════════════════════════
+   GRADIENT OVERLAY (bottom text area)
+   ══════════════════════════════════ */
+.section-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 4rem 6vw 3rem;
+  background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.5) 50%, transparent 100%);
+  z-index: 2;
+}
+
+/* ══════════════════════════════════
+   TYPOGRAPHY
+   ══════════════════════════════════ */
+.section-heading {
+  font-family: var(--font-heading);
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 1rem;
+  letter-spacing: -0.01em;
+}
+
+.section-text {
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: clamp(0.9rem, 1.5vw, 1.05rem);
+  line-height: 1.75;
+  color: var(--text-dim);
+  max-width: 650px;
+}
+
+.stat-line {
+  margin-top: 1.2rem;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: clamp(0.95rem, 1.5vw, 1.1rem);
+  letter-spacing: 0.03em;
+  color: rgba(255,255,255,0.7);
+}
+
+.stat-number {
+  color: var(--red);
+  font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+  font-weight: 700;
+  font-family: var(--font-heading);
+  vertical-align: baseline;
+  margin-right: 0.15em;
+}
+
+/* ══════════════════════════════════
+   HERO SECTION
+   ══════════════════════════════════ */
+.hero-inner {
+  text-align: center;
+  z-index: 2;
+}
+
+.hero-logo {
+  width: clamp(200px, 35vw, 380px);
+  filter: invert(1) brightness(2);
+  margin-bottom: 1.5rem;
+}
+
+.hero-subtitle {
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: clamp(0.8rem, 1.4vw, 1rem);
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.5);
+}
+
+/* ══════════════════════════════════
+   REFERENSSIT + YHTEISTYÖKUMPPANIT
+   ══════════════════════════════════ */
+.ref-section-inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  max-width: 1100px;
+  width: 100%;
+  padding: 0 6vw;
+  z-index: 2;
+}
+
+.ref-column h2,
+.partner-column h2 {
+  font-family: var(--font-heading);
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 700;
+  margin-bottom: 2rem;
+  color: var(--white);
+}
+
+.ref-item {
+  padding-left: 1.2rem;
+  border-left: 2px solid var(--red);
+  margin-bottom: 1.5rem;
+}
+
+.ref-item .ref-title {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--white);
+  margin-bottom: 0.25rem;
+}
+
+.ref-item .ref-desc {
+  font-size: 0.85rem;
+  color: rgba(255,255,255,0.55);
+  line-height: 1.5;
+}
+
+.partner-logos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  align-items: center;
+}
+
+.partner-logos a {
+  display: block;
+  flex: 0 0 auto;
+}
+
+.partner-logos img {
+  height: 50px;
+  width: auto;
+  filter: brightness(0) invert(1);
+  opacity: 0.5;
+  transition: opacity 0.3s ease;
+}
+
+.partner-logos img:hover {
+  opacity: 0.9;
+}
+
+/* ══════════════════════════════════
+   FOOTER
+   ══════════════════════════════════ */
+.footer-inner {
+  text-align: center;
+  z-index: 2;
+}
+
+.footer-logo {
+  width: clamp(140px, 22vw, 220px);
+  filter: invert(1) brightness(2);
+  margin-bottom: 2rem;
+}
+
+.social-links {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.social-links a {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 50%;
+  transition: border-color 0.3s ease, transform 0.3s ease;
+}
+
+.social-links a:hover {
+  border-color: var(--red);
+  transform: scale(1.1);
+}
+
+.social-links svg {
+  width: 18px;
+  height: 18px;
+  fill: rgba(255,255,255,0.6);
+  transition: fill 0.3s ease;
+}
+
+.social-links a:hover svg {
+  fill: var(--white);
+}
+
+.footer-text {
+  font-size: 0.8rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.3);
+}
+
+/* ══════════════════════════════════
+   SECTION COUNTER (bottom-right)
+   ══════════════════════════════════ */
+.section-counter {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  color: rgba(255,255,255,0.4);
+  z-index: 50;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+
+.section-counter .counter-current {
+  color: rgba(255,255,255,0.7);
+  font-weight: 600;
+}
+
+/* ══════════════════════════════════
+   REVEAL ANIMATIONS
+   ══════════════════════════════════ */
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-delay-1 { transition-delay: 0.15s; }
+.reveal-delay-2 { transition-delay: 0.3s; }
+.reveal-delay-3 { transition-delay: 0.45s; }
+
+/* ══════════════════════════════════
+   RESPONSIVE
+   ══════════════════════════════════ */
+@media (max-width: 768px) {
+  .section-overlay {
+    padding: 3rem 5vw 2rem;
+  }
+
+  .ref-section-inner {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+    padding: 0 5vw;
+  }
+
+  .partner-logos {
+    gap: 1.5rem;
+  }
+
+  .partner-logos img {
+    height: 36px;
+  }
+
+  .section-counter {
+    bottom: 1rem;
+    right: 1rem;
+    font-size: 0.65rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .section-overlay {
+    padding: 2.5rem 4vw 1.5rem;
+  }
+
+  .hero-subtitle {
+    letter-spacing: 0.15em;
+    font-size: 0.7rem;
+  }
+}
+</style>
+</head>
+<body>
+
+
+<!-- ══════════════════════════════════════════
+     SECTION COUNTER
+     ══════════════════════════════════════════ -->
+<div class="section-counter" id="sectionCounter">
+  <span class="counter-current">01</span> / 06
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     SECTION 1 — HERO
+     ══════════════════════════════════════════ -->
+<section class="section" data-section="0" style="background: #000;">
+  <div class="hero-inner">
+    <img class="hero-logo reveal" src="https://www.ahteemu.fi/wp-content/uploads/2024/03/ahteemu-logo-black.png" alt="Ahteemu">
+    <p class="hero-subtitle reveal reveal-delay-1">Juontaja &middot; Lent&auml;j&auml; &middot; Hevosvalmentaja</p>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════
+     SECTION 2 — JUONTAJA
+     ══════════════════════════════════════════ -->
+<section class="section" data-section="1">
+  <div class="section-bg juontaja"></div>
+  <div class="section-overlay">
+    <h2 class="section-heading reveal">Juontaja</h2>
+    <p class="section-text reveal reveal-delay-1">Laita k&auml;teeni mikrofoni, eteeni yleis&ouml;, olen kotonani. Vuosien varrella olen saanut juontaa tapahtumia seminaareista burleski-iltamiin, Olympiastadionilta TV-studioon, Helsingist&auml; Ouluun, suomeksi ja englanniksi, my&ouml;s p&aring; svenska.</p>
+    <p class="stat-line reveal reveal-delay-2">Yli <span class="stat-number" data-target="100" data-suffix="+">0</span> juonnettua tapahtumaa</p>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════
+     SECTION 3 — ILMAILU
+     ══════════════════════════════════════════ -->
+<section class="section" data-section="2">
+  <div class="section-bg ilmailu"></div>
+  <div class="section-overlay">
+    <h2 class="section-heading reveal">Ilmailu</h2>
+    <p class="section-text reveal reveal-delay-1">Lapsuuden haaveesta tuli totta ja p&auml;&auml;sin unelma-ammattiini lent&auml;j&auml;ksi. 25 vuoden ja yli 12&nbsp;000 lentotunnin j&auml;lkeen on se sama pikkupoikamainen innostus tallella. Samalla maailma on pienentynyt. Tyynenmeren molemmat rannat, Pohjoisnapa, Gr&ouml;nlanti, Siperia, Gobin autiomaa.</p>
+    <p class="stat-line reveal reveal-delay-2">Yli <span class="stat-number" data-target="12000" data-suffix="">0</span> lentotuntia</p>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════
+     SECTION 4 — HEVOSET
+     ══════════════════════════════════════════ -->
+<section class="section" data-section="3">
+  <div class="section-bg hevoset"></div>
+  <div class="section-overlay">
+    <h2 class="section-heading reveal">Hevoset</h2>
+    <p class="section-text reveal reveal-delay-1">Hevosen lempe&auml; katse, turvan pehme&auml; iho, tuttu h&ouml;r&auml;hdys karsinasta. Tunne, jonka saa ollessaan hevosen kanssa, on sellainen, johon ei ikin&auml; kyll&auml;sty.</p>
+    <p class="section-text reveal reveal-delay-2" style="margin-top: 0.8rem;">Valmentaessani olen vaativa, mutta kannustava. Tarkka, mutta lempe&auml;. Tosissani, mutten tosikkona.</p>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════
+     SECTION 5 — REFERENSSIT + YHTEISTYÖKUMPPANIT
+     ══════════════════════════════════════════ -->
+<section class="section" data-section="4" style="background: #0a0a0a;">
+  <div class="ref-section-inner">
+    <div class="ref-column reveal">
+      <h2>Referenssit</h2>
+      <div class="ref-item">
+        <p class="ref-title">Helsinki International Horse Show</p>
+        <p class="ref-desc">Show-ohjelmien juontaminen vastuullani.</p>
+      </div>
+      <div class="ref-item">
+        <p class="ref-title">&ldquo;Cityravit&rdquo;</p>
+        <p class="ref-desc">Stadikalla 2013 &middot; Kaivarissa 2017 &middot; Lumiravit 2018 &middot; Bastionissa 2022&ndash;2023</p>
+      </div>
+      <div class="ref-item">
+        <p class="ref-title">Hevoset-messut</p>
+        <p class="ref-desc">Tampereella j&auml;rjestett&auml;v&auml;t messut.</p>
+      </div>
+      <div class="ref-item">
+        <p class="ref-title">Kaviionj&auml;lki&auml; (Yle, TV2)</p>
+        <p class="ref-desc">Kuninkuusravien TV-ohjelman studio-osuudet.</p>
+      </div>
+      <div class="ref-item">
+        <p class="ref-title">Kavioliitossa-podcast</p>
+        <p class="ref-desc">&ldquo;Asiaa vain siteeksi&rdquo;.</p>
+      </div>
+    </div>
+    <div class="partner-column reveal reveal-delay-2">
+      <h2>Yhteisty&ouml;kumppanit</h2>
+      <div class="partner-logos">
+        <a href="https://www.backontrack.com" target="_blank" rel="noopener">
+          <img src="https://www.ahteemu.fi/wp-content/uploads/2024/04/Back-on-Track-logo-3.png" alt="Back on Track">
+        </a>
+        <a href="https://www.houseofhorseshelsinki.fi" target="_blank" rel="noopener">
+          <img src="https://www.ahteemu.fi/wp-content/uploads/2024/04/HHH-logo.png" alt="House of Horses Helsinki">
+        </a>
+        <a href="https://www.dogtrail.fi" target="_blank" rel="noopener">
+          <img src="https://www.ahteemu.fi/wp-content/uploads/2024/05/dogtrail-logo-458px.png" alt="Dog Trail">
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════
+     SECTION 6 — FOOTER
+     ══════════════════════════════════════════ -->
+<section class="section" data-section="5" style="background: #0a0a0a;">
+  <div class="footer-inner">
+    <img class="footer-logo reveal" src="https://www.ahteemu.fi/wp-content/uploads/2024/03/ahteemu-logo-black.png" alt="Ahteemu">
+    <div class="social-links reveal reveal-delay-1">
+      <a href="https://facebook.com/ahteemu/" target="_blank" rel="noopener" aria-label="Facebook">
+        <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+      </a>
+      <a href="https://instagram.com/ahteemu/" target="_blank" rel="noopener" aria-label="Instagram">
+        <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+      </a>
+      <a href="https://x.com/ahteemu" target="_blank" rel="noopener" aria-label="X">
+        <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+      </a>
+    </div>
+    <p class="footer-text reveal reveal-delay-2">T:mi Ahteemu</p>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════
+     JAVASCRIPT
+     ══════════════════════════════════════════ -->
+<script>
+(function() {
+  'use strict';
+
+  const sections = document.querySelectorAll('.section');
+  const counter = document.getElementById('sectionCounter');
+  const totalSections = sections.length;
+  let currentIndex = 0;
+  let isScrolling = false;
+
+  // ── Update section counter ──
+  function updateCounter(index) {
+    const num = String(index + 1).padStart(2, '0');
+    counter.innerHTML = '<span class="counter-current">' + num + '</span> / 0' + totalSections;
+  }
+
+  // ── Intersection Observer for active section ──
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && entry.intersectionRatio > 0.5) {
+        const idx = parseInt(entry.target.dataset.section);
+        if (idx !== currentIndex) {
+          currentIndex = idx;
+          updateCounter(currentIndex);
+        }
+        // Trigger reveal animations
+        entry.target.querySelectorAll('.reveal').forEach(el => {
+          el.classList.add('visible');
+        });
+      }
+    });
+  }, { threshold: 0.5 });
+
+  sections.forEach(sec => observer.observe(sec));
+
+  // ── Trigger reveals for hero on load ──
+  window.addEventListener('load', () => {
+    sections[0].querySelectorAll('.reveal').forEach(el => el.classList.add('visible'));
+  });
+
+  // ── Navigate to section ──
+  function goTo(index) {
+    if (index < 0 || index >= totalSections || isScrolling) return;
+    isScrolling = true;
+    currentIndex = index;
+    updateCounter(currentIndex);
+    sections[index].scrollIntoView({ behavior: 'smooth' });
+    setTimeout(() => { isScrolling = false; }, 800);
+  }
+
+  // ── Click anywhere to advance ──
+  document.addEventListener('click', (e) => {
+    // Don't advance if clicking a link or button
+    if (e.target.closest('a') || e.target.closest('button')) return;
+    goTo(currentIndex + 1);
+  });
+
+  // ── Keyboard navigation ──
+  document.addEventListener('keydown', (e) => {
+    switch(e.key) {
+      case 'ArrowDown':
+      case ' ':
+      case 'PageDown':
+        e.preventDefault();
+        goTo(currentIndex + 1);
+        break;
+      case 'ArrowUp':
+      case 'PageUp':
+        e.preventDefault();
+        goTo(currentIndex - 1);
+        break;
+      case 'Home':
+        e.preventDefault();
+        goTo(0);
+        break;
+      case 'End':
+        e.preventDefault();
+        goTo(totalSections - 1);
+        break;
+    }
+  });
+
+  // ── Animated counters ──
+  const counterEls = document.querySelectorAll('.stat-number[data-target]');
+  const counterObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && !entry.target.dataset.counted) {
+        entry.target.dataset.counted = 'true';
+        animateCounter(entry.target);
+      }
+    });
+  }, { threshold: 0.5 });
+
+  counterEls.forEach(el => counterObserver.observe(el));
+
+  function animateCounter(el) {
+    const target = parseInt(el.dataset.target);
+    const suffix = el.dataset.suffix || '';
+    const duration = 2000;
+    const start = performance.now();
+
+    function easeOutCubic(t) {
+      return 1 - Math.pow(1 - t, 3);
+    }
+
+    function step(now) {
+      const elapsed = now - start;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = easeOutCubic(progress);
+      const current = Math.round(eased * target);
+
+      if (target >= 1000) {
+        el.textContent = current.toLocaleString('fi-FI') + suffix;
+      } else {
+        el.textContent = current + suffix;
+      }
+
+      if (progress < 1) {
+        requestAnimationFrame(step);
+      }
+    }
+
+    requestAnimationFrame(step);
+  }
+
+})();
+</script>
+</body>
+</html>

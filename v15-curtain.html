@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="fi" style="scroll-snap-type: y mandatory;">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ahteemu — Teemu Ahtee</title>
+<meta name="description" content="Teemu Ahtee — juontaja, lentäjä, hevosvalmentaja. T:mi Ahteemu.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════
+   RESET & BASE
+   ══════════════════════════════════ */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --red: #CC3444;
+  --dark: #1f1f1f;
+  --cream: #f5f2ed;
+  --white: #ffffff;
+  --font-heading: 'Playfair Display', Georgia, serif;
+  --font-body: 'Montserrat', Helvetica, Arial, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  font-weight: 300;
+  color: var(--dark);
+  -webkit-font-smoothing: antialiased;
+  margin: 0;
+}
+
+/* ══════════════════════════════════
+   SECTIONS
+   ══════════════════════════════════ */
+.section {
+  height: 100vh;
+  scroll-snap-align: start;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.section--cream { background: var(--cream); color: var(--dark); }
+.section--dark { background: var(--dark); color: var(--white); }
+
+/* Background images */
+.section-bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  z-index: 0;
+}
+
+.section-bg--dim {
+  filter: brightness(0.35);
+}
+
+.section-content {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 1100px;
+  padding: 2rem;
+}
+
+/* ══════════════════════════════════
+   CURTAIN
+   ══════════════════════════════════ */
+.curtain {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  pointer-events: none;
+}
+
+.curtain-left, .curtain-right {
+  width: 50%;
+  height: 100%;
+  transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+.curtain-left { background: var(--curtain-color); }
+.curtain-right { background: var(--curtain-color); }
+
+.section.revealed .curtain-left { transform: translateX(-100%); }
+.section.revealed .curtain-right { transform: translateX(100%); }
+
+/* Curtain label (centered text on closed curtain) */
+.curtain-label {
+  position: absolute;
+  inset: 0;
+  z-index: 11;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+
+.section.revealed .curtain-label {
+  opacity: 0;
+}
+
+.curtain-label span {
+  font-family: var(--font-heading);
+  font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  opacity: 0.4;
+}
+
+/* Curtain label color depends on curtain bg */
+.curtain--red .curtain-label span { color: var(--white); }
+.curtain--dark .curtain-label span { color: var(--white); }
+.curtain--cream .curtain-label span { color: var(--dark); }
+
+/* ══════════════════════════════════
+   TYPOGRAPHY
+   ══════════════════════════════════ */
+h2 {
+  font-family: var(--font-heading);
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  font-weight: 700;
+  line-height: 1.1;
+  margin-bottom: 1.5rem;
+}
+
+.section--dark h2 { color: var(--white); }
+.section--cream h2 { color: var(--dark); }
+
+.accent { color: var(--red); }
+
+p.body-text {
+  font-size: clamp(0.95rem, 1.3vw, 1.1rem);
+  line-height: 1.9;
+  max-width: 600px;
+  margin-bottom: 1.5rem;
+}
+
+.section--dark p.body-text { color: rgba(255,255,255,0.75); }
+.section--cream p.body-text { color: rgba(31,31,31,0.7); }
+
+/* ══════════════════════════════════
+   STATS
+   ══════════════════════════════════ */
+.stat {
+  margin-top: 1.5rem;
+}
+
+.stat-number {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: clamp(3rem, 7vw, 5rem);
+  color: var(--red);
+  line-height: 1;
+  display: block;
+}
+
+.stat-label {
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  margin-top: 0.4rem;
+  display: block;
+}
+
+.section--dark .stat-label { color: rgba(255,255,255,0.5); }
+.section--cream .stat-label { color: rgba(31,31,31,0.5); }
+
+/* ══════════════════════════════════
+   HERO (Section 1)
+   ══════════════════════════════════ */
+.hero {
+  flex-direction: column;
+  gap: 1.5rem;
+  text-align: center;
+}
+
+.logo-hero {
+  width: clamp(180px, 25vw, 300px);
+  margin-bottom: 0.5rem;
+}
+
+.hero-subtitle {
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: clamp(0.8rem, 1.3vw, 1rem);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(31,31,31,0.5);
+}
+
+.hero-scroll-hint {
+  position: absolute;
+  bottom: 2.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  opacity: 0.35;
+  animation: float-hint 2.5s ease-in-out infinite;
+}
+
+.hero-scroll-hint span {
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--dark);
+}
+
+.hero-scroll-hint svg {
+  width: 18px;
+  height: 18px;
+  fill: var(--dark);
+}
+
+@keyframes float-hint {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(8px); }
+}
+
+/* ══════════════════════════════════
+   REFERENSSIT
+   ══════════════════════════════════ */
+.ref-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  margin-top: 2.5rem;
+}
+
+.ref-item {
+  border-top: 3px solid var(--red);
+  padding-top: 1.2rem;
+}
+
+.ref-title {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 1.05rem;
+  margin-bottom: 0.4rem;
+  color: var(--white);
+}
+
+.ref-desc {
+  font-size: 0.85rem;
+  line-height: 1.7;
+  color: rgba(255,255,255,0.55);
+}
+
+/* ══════════════════════════════════
+   FOOTER
+   ══════════════════════════════════ */
+.footer-inner {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+}
+
+.partner-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2.5rem;
+  flex-wrap: wrap;
+}
+
+.partner-row a {
+  display: inline-block;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  opacity: 0.45;
+}
+
+.partner-row a:hover {
+  opacity: 1;
+  transform: scale(1.05);
+}
+
+.partner-row img {
+  height: 40px;
+  width: auto;
+  object-fit: contain;
+}
+
+.footer-divider {
+  width: 60px;
+  height: 1px;
+  background: rgba(31,31,31,0.15);
+}
+
+.footer-logo {
+  width: 120px;
+}
+
+.social-links {
+  display: flex;
+  gap: 1.2rem;
+  align-items: center;
+}
+
+.social-links a {
+  color: var(--dark);
+  opacity: 0.4;
+  transition: opacity 0.3s ease;
+}
+
+.social-links a:hover { opacity: 1; }
+
+.social-links svg {
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+}
+
+.footer-text {
+  font-size: 0.8rem;
+  color: rgba(31,31,31,0.4);
+  letter-spacing: 0.1em;
+}
+
+/* ══════════════════════════════════
+   NAV DOTS
+   ══════════════════════════════════ */
+.nav-dots {
+  position: fixed;
+  right: 1.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  z-index: 100;
+  padding: 14px 10px;
+  background: rgba(31,31,31,0.35);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: 24px;
+  border: 1px solid rgba(255,255,255,0.08);
+  opacity: 0.7;
+  transition: opacity 0.3s ease;
+}
+
+.nav-dots:hover { opacity: 1; }
+
+.nav-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.25);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.nav-dot:hover {
+  background: rgba(255,255,255,0.6);
+  transform: scale(1.5);
+}
+
+.nav-dot.active {
+  background: var(--red);
+  box-shadow: 0 0 10px rgba(204,52,68,0.6);
+}
+
+.nav-dot__label {
+  position: absolute;
+  right: 22px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  color: var(--white);
+  pointer-events: none;
+}
+
+.nav-dots:hover .nav-dot:hover .nav-dot__label { opacity: 1; }
+
+/* ══════════════════════════════════
+   CONTENT REVEAL ANIMATIONS
+   ══════════════════════════════════ */
+.fade-in {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.7s ease 0.5s, transform 0.7s ease 0.5s;
+}
+
+.section.revealed .fade-in,
+.section.no-curtain .fade-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Staggered delays */
+.fade-in.d1 { transition-delay: 0.6s; }
+.fade-in.d2 { transition-delay: 0.8s; }
+.fade-in.d3 { transition-delay: 1.0s; }
+.fade-in.d4 { transition-delay: 1.2s; }
+
+/* ══════════════════════════════════
+   RESPONSIVE
+   ══════════════════════════════════ */
+@media (max-width: 767px) {
+  .section-content {
+    padding: 1.5rem;
+  }
+
+  h2 {
+    font-size: clamp(2rem, 8vw, 3rem);
+  }
+
+  .ref-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .nav-dots {
+    right: 0.6rem;
+    padding: 8px 6px;
+    gap: 10px;
+  }
+
+  .nav-dot {
+    width: 6px;
+    height: 6px;
+  }
+
+  .nav-dot__label { display: none; }
+
+  .partner-row img { height: 30px; }
+
+  .stat-number {
+    font-size: clamp(2.5rem, 12vw, 4rem);
+  }
+}
+
+</style>
+</head>
+<body>
+
+<!-- ═══ NAV DOTS ═══ -->
+<nav class="nav-dots">
+  <div class="nav-dot active" data-index="0"><span class="nav-dot__label">Alku</span></div>
+  <div class="nav-dot" data-index="1"><span class="nav-dot__label">Juontaja</span></div>
+  <div class="nav-dot" data-index="2"><span class="nav-dot__label">Ilmailu</span></div>
+  <div class="nav-dot" data-index="3"><span class="nav-dot__label">Hevoset</span></div>
+  <div class="nav-dot" data-index="4"><span class="nav-dot__label">Referenssit</span></div>
+  <div class="nav-dot" data-index="5"><span class="nav-dot__label">Yhteystiedot</span></div>
+</nav>
+
+
+<!-- ══════════════════════════════════════════
+     SECTION 1 — HERO (no curtain)
+     ══════════════════════════════════════════ -->
+<section class="section section--cream hero no-curtain" data-section="0">
+  <img class="logo-hero fade-in" src="https://www.ahteemu.fi/wp-content/uploads/2024/03/ahteemu-logo-black.png" alt="Ahteemu">
+  <p class="hero-subtitle fade-in d1">Juontaja &middot; Lentäjä &middot; Hevosvalmentaja</p>
+  <div class="hero-scroll-hint">
+    <span>Selaa</span>
+    <svg viewBox="0 0 24 24"><path d="M12 16l-6-6h12z"/></svg>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════
+     SECTION 2 — JUONTAJA (red curtain → dark bg)
+     ══════════════════════════════════════════ -->
+<section class="section section--dark curtain--red" data-section="1" style="--curtain-color: #CC3444;">
+  <div class="curtain">
+    <div class="curtain-left"></div>
+    <div class="curtain-right"></div>
+  </div>
+  <div class="curtain-label"><span>Juontaja</span></div>
+  <div class="section-bg section-bg--dim" style="background-image: url('https://www.ahteemu.fi/wp-content/uploads/2024/04/ahteemu-bg-1920x1080px-juontaja.jpg');"></div>
+  <div class="section-content">
+    <h2 class="fade-in">Juontaja</h2>
+    <p class="body-text fade-in d1">Laita käteeni mikrofoni, eteeni yleisö, olen kotonani. Vuosien varrella olen saanut juontaa tapahtumia seminaareista burleski-iltamiin, Olympiastadionilta TV-studioon, Helsingistä Ouluun, suomeksi ja englanniksi, myös på svenska.</p>
+    <div class="stat fade-in d2">
+      <span class="stat-number" data-count="100">0</span>
+      <span class="stat-label">Yli 100 juonnettua tapahtumaa</span>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════
+     SECTION 3 — ILMAILU (dark curtain → cream bg)
+     ══════════════════════════════════════════ -->
+<section class="section section--cream curtain--dark" data-section="2" style="--curtain-color: #1f1f1f;">
+  <div class="curtain">
+    <div class="curtain-left"></div>
+    <div class="curtain-right"></div>
+  </div>
+  <div class="curtain-label"><span>Ilmailu</span></div>
+  <div class="section-content" style="text-align: center;">
+    <h2 class="fade-in">Ilmailu</h2>
+    <p class="body-text fade-in d1" style="margin-left: auto; margin-right: auto;">Lapsuuden haaveesta tuli totta ja pääsin unelma-ammattiini lentäjäksi. 25 vuoden ja yli 12 000 lentotunnin jälkeen on se sama pikkupoikamainen innostus tallella. Samalla maailma on pienentynyt. Tyynenmeren molemmat rannat, Pohjoisnapa, Grönlanti, Siperia, Gobin autiomaa.</p>
+    <div class="stat fade-in d2" style="display: flex; flex-direction: column; align-items: center;">
+      <span class="stat-number" data-count="12000" data-suffix="+">0</span>
+      <span class="stat-label">lentotuntia</span>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════
+     SECTION 4 — HEVOSET (red curtain → dark bg)
+     ══════════════════════════════════════════ -->
+<section class="section section--dark curtain--red" data-section="3" style="--curtain-color: #CC3444;">
+  <div class="curtain">
+    <div class="curtain-left"></div>
+    <div class="curtain-right"></div>
+  </div>
+  <div class="curtain-label"><span>Hevoset</span></div>
+  <div class="section-bg section-bg--dim" style="background-image: url('https://www.ahteemu.fi/wp-content/uploads/2024/04/ahteemu-bg-1920x1080px-hevoset.jpg');"></div>
+  <div class="section-content">
+    <h2 class="fade-in">Hevoset</h2>
+    <p class="body-text fade-in d1">Hevosen lempeä katse, turvan pehmeä iho, tuttu hörähdys karsinasta. Tunne, jonka saa ollessaan hevosen kanssa, on sellainen, johon ei ikinä kyllästy.</p>
+    <p class="body-text fade-in d2">Valmentajana pyrin löytämään sinulle ja hevosellesi sopivan tavan oppia ja omaksua uutta. Kyselen, kuuntelen.</p>
+    <p class="body-text fade-in d3">Valmentaessani olen vaativa, mutta kannustava. Tarkka, mutta lempeä. Tosissani, mutten tosikkona.</p>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════
+     SECTION 5 — REFERENSSIT (cream curtain → dark bg)
+     ══════════════════════════════════════════ -->
+<section class="section section--dark curtain--cream" data-section="4" style="--curtain-color: #f5f2ed;">
+  <div class="curtain">
+    <div class="curtain-left"></div>
+    <div class="curtain-right"></div>
+  </div>
+  <div class="curtain-label"><span>Referenssit</span></div>
+  <div class="section-content">
+    <h2 class="fade-in" style="text-align: center;">Referenssit</h2>
+    <div class="ref-grid">
+      <div class="ref-item fade-in d1">
+        <p class="ref-title">Helsinki International Horse Show</p>
+        <p class="ref-desc">Show-ohjelmien juontaminen vastuullani.</p>
+      </div>
+      <div class="ref-item fade-in d1">
+        <p class="ref-title">"Cityravit"</p>
+        <p class="ref-desc">Stadikalla 2013 &middot; Kaivarissa 2017 &middot; Lumiravit 2018 &middot; Bastionissa 2022&ndash;2023</p>
+      </div>
+      <div class="ref-item fade-in d2">
+        <p class="ref-title">Hevoset-messut</p>
+        <p class="ref-desc">Tampereella järjestettävät messut.</p>
+      </div>
+      <div class="ref-item fade-in d2">
+        <p class="ref-title">Kaviionjälkiä (Yle, TV2)</p>
+        <p class="ref-desc">Kuninkuusravien TV-ohjelman studio-osuudet.</p>
+      </div>
+      <div class="ref-item fade-in d3">
+        <p class="ref-title">Kavioliitossa-podcast</p>
+        <p class="ref-desc">&ldquo;Asiaa vain siteeksi&rdquo;.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════
+     SECTION 6 — KUMPPANIT + FOOTER (dark curtain → cream bg)
+     ══════════════════════════════════════════ -->
+<section class="section section--cream curtain--dark" data-section="5" style="--curtain-color: #1f1f1f;">
+  <div class="curtain">
+    <div class="curtain-left"></div>
+    <div class="curtain-right"></div>
+  </div>
+  <div class="curtain-label"><span>Yhteystiedot</span></div>
+  <div class="footer-inner fade-in">
+    <div class="partner-row">
+      <a href="https://www.backontrack.com" target="_blank" rel="noopener">
+        <img src="https://www.ahteemu.fi/wp-content/uploads/2024/04/Back-on-Track-logo-3.png" alt="Back on Track">
+      </a>
+      <a href="https://www.houseofhorseshelsinki.fi" target="_blank" rel="noopener">
+        <img src="https://www.ahteemu.fi/wp-content/uploads/2024/04/HHH-logo.png" alt="House of Horses Helsinki">
+      </a>
+      <a href="https://www.dogtrail.fi" target="_blank" rel="noopener">
+        <img src="https://www.ahteemu.fi/wp-content/uploads/2024/05/dogtrail-logo-458px.png" alt="Dog Trail">
+      </a>
+    </div>
+    <div class="footer-divider"></div>
+    <img class="footer-logo" src="https://www.ahteemu.fi/wp-content/uploads/2024/03/ahteemu-logo-black.png" alt="Ahteemu">
+    <div class="social-links">
+      <a href="https://facebook.com/ahteemu/" target="_blank" rel="noopener" aria-label="Facebook">
+        <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+      </a>
+      <a href="https://instagram.com/ahteemu/" target="_blank" rel="noopener" aria-label="Instagram">
+        <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+      </a>
+      <a href="https://x.com/ahteemu" target="_blank" rel="noopener" aria-label="X">
+        <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+      </a>
+    </div>
+    <p class="footer-text">T:mi Ahteemu</p>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════
+     JAVASCRIPT
+     ══════════════════════════════════════════ -->
+<script>
+(function() {
+  'use strict';
+
+  const sections = document.querySelectorAll('.section');
+  const navDots = document.querySelectorAll('.nav-dot');
+  let currentIndex = 0;
+  let isScrolling = false;
+
+  // Track which sections have been revealed (once open, stays open)
+  const revealedSet = new Set();
+
+  // ── IntersectionObserver for curtain reveal ──
+  const curtainObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const section = entry.target;
+        const idx = parseInt(section.dataset.section);
+
+        if (!revealedSet.has(idx)) {
+          revealedSet.add(idx);
+          section.classList.add('revealed');
+        }
+
+        // Update current index & nav dots
+        currentIndex = idx;
+        navDots.forEach(d => d.classList.remove('active'));
+        navDots[idx]?.classList.add('active');
+
+        // Trigger number counters in this section
+        section.querySelectorAll('.stat-number[data-count]').forEach(el => {
+          if (!el.dataset.counted) {
+            animateCounter(el);
+            el.dataset.counted = 'true';
+          }
+        });
+      }
+    });
+  }, { threshold: 0.5 });
+
+  sections.forEach(s => curtainObserver.observe(s));
+
+  // ── Animated number counter ──
+  function animateCounter(el) {
+    const target = parseInt(el.dataset.count);
+    const suffix = el.dataset.suffix || '';
+    const duration = 1800;
+    const start = performance.now();
+
+    function tick(now) {
+      const elapsed = now - start;
+      const progress = Math.min(elapsed / duration, 1);
+      const ease = 1 - Math.pow(1 - progress, 3);
+      const current = Math.round(ease * target);
+      el.textContent = current.toLocaleString('fi-FI') + suffix;
+      if (progress < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+
+  // ── Nav dot clicks ──
+  navDots.forEach(dot => {
+    dot.addEventListener('click', () => {
+      const idx = parseInt(dot.dataset.index);
+      sections[idx]?.scrollIntoView({ behavior: 'smooth' });
+    });
+  });
+
+  // ── Click to advance ──
+  document.addEventListener('click', (e) => {
+    if (e.target.closest('.nav-dots') || e.target.closest('a') || e.target.closest('button')) return;
+    const next = Math.min(currentIndex + 1, sections.length - 1);
+    if (next !== currentIndex) {
+      sections[next].scrollIntoView({ behavior: 'smooth' });
+    }
+  });
+
+  // ── Keyboard navigation ──
+  document.addEventListener('keydown', (e) => {
+    if (isScrolling) return;
+    let target = null;
+    if (e.key === 'ArrowDown' || e.key === ' ') {
+      e.preventDefault();
+      target = Math.min(currentIndex + 1, sections.length - 1);
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      target = Math.max(currentIndex - 1, 0);
+    }
+    if (target !== null && target !== currentIndex) {
+      isScrolling = true;
+      sections[target].scrollIntoView({ behavior: 'smooth' });
+      setTimeout(() => { isScrolling = false; }, 900);
+    }
+  });
+
+  // ── Mark hero as initially visible ──
+  // Hero has no curtain, so trigger its fade-ins immediately
+  document.querySelector('.section.no-curtain')?.classList.add('revealed');
+
+})();
+</script>
+
+</body>
+</html>
