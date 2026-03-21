@@ -171,6 +171,21 @@ body {
   to { opacity: 1; transform: translateY(0); }
 }
 
+/* ── All cover body text — readable on any background ── */
+.cover-body {
+  background: rgba(0, 0, 0, 0.5);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  padding: 1.5rem 2rem;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.06);
+  color: rgba(255,255,255,0.9);
+}
+
+.cover-quote {
+  text-shadow: 0 2px 20px rgba(0,0,0,0.6);
+}
+
 /* ══════════════════════════════════
    COVER 2 — JUONTAJA
    Layout: heading top-left huge, body center-left narrow, stat bottom-right enormous
