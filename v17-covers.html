@@ -217,7 +217,8 @@ body {
   font-size: clamp(5rem, 12vw, 10rem);
   line-height: 0.85;
   color: var(--red);
-  opacity: 0.7;
+  opacity: 1;
+  text-shadow: 0 4px 30px rgba(0,0,0,0.4);
 }
 
 .cover--juontaja .cover-stat-label {
@@ -241,7 +242,8 @@ body {
   font-weight: 700;
   font-size: clamp(6rem, 16vw, 14rem);
   letter-spacing: 0.02em;
-  color: rgba(255,255,255,0.07);
+  color: rgba(255,255,255,0.2);
+  text-shadow: 0 4px 40px rgba(0,0,0,0.3);
   white-space: nowrap;
   z-index: 1;
   pointer-events: none;
@@ -511,7 +513,10 @@ body {
   transition: opacity 0.8s ease 0.5s, transform 0.8s ease 0.5s;
 }
 
-.cover--juontaja.in-view .cover-stat,
+.cover--juontaja.in-view .cover-stat {
+  opacity: 1;
+  transform: translateY(0);
+}
 .cover--juontaja.in-view .cover-stat-label {
   opacity: 0.7;
   transform: translateY(0);
