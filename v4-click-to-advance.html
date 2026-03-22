@@ -853,6 +853,25 @@
     </section>
 
     <script>
+        // ===== SAFARI SMOOTH SCROLL HELPER =====
+        function smoothScrollTo(element) {
+          document.documentElement.style.scrollSnapType = 'none';
+          element.scrollIntoView({ behavior: 'smooth' });
+          let scrollTimeout;
+          function onScroll() {
+            clearTimeout(scrollTimeout);
+            scrollTimeout = setTimeout(() => {
+              document.documentElement.style.scrollSnapType = '';
+              window.removeEventListener('scroll', onScroll);
+            }, 100);
+          }
+          window.addEventListener('scroll', onScroll);
+          setTimeout(() => {
+            document.documentElement.style.scrollSnapType = '';
+            window.removeEventListener('scroll', onScroll);
+          }, 1500);
+        }
+
         // ===== CLICK-TO-ADVANCE NAVIGATION =====
         // Clicking anywhere on a card advances to the next one.
         // Links, buttons, thumbs and partner logos stop propagation so they work normally.
@@ -867,7 +886,7 @@
                 if (target) return;
 
                 const nextCard = cardList[index + 1];
-                if (nextCard) nextCard.scrollIntoView({ behavior: 'smooth' });
+                if (nextCard) smoothScrollTo(nextCard);
             });
         });
 
@@ -1015,7 +1034,7 @@
         dots.forEach(dot => {
             dot.addEventListener('click', () => {
                 const target = document.getElementById(dot.dataset.target);
-                if (target) target.scrollIntoView({ behavior: 'smooth' });
+                if (target) smoothScrollTo(target);
             });
         });
     </script>

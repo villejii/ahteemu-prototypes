@@ -446,6 +446,25 @@ h1, h2, h3 { font-family: 'Playfair Display', serif; font-weight: 700; }
 (function() {
   'use strict';
 
+  // ── Safari smooth scroll helper ──
+  function smoothScrollTo(element) {
+    document.documentElement.style.scrollSnapType = 'none';
+    element.scrollIntoView({ behavior: 'smooth' });
+    var scrollTimeout;
+    function onScroll() {
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(function() {
+        document.documentElement.style.scrollSnapType = '';
+        window.removeEventListener('scroll', onScroll);
+      }, 100);
+    }
+    window.addEventListener('scroll', onScroll);
+    setTimeout(function() {
+      document.documentElement.style.scrollSnapType = '';
+      window.removeEventListener('scroll', onScroll);
+    }, 1500);
+  }
+
   // ── IntersectionObserver: staggered card reveal ──
   const cards = document.querySelectorAll('.bento-card');
 
@@ -537,7 +556,7 @@ h1, h2, h3 { font-family: 'Playfair Display', serif; font-weight: 700; }
     var nextIndex = currentIndex + 1;
     if (nextIndex >= rows.length) nextIndex = 0;
 
-    rows[nextIndex].scrollIntoView({ behavior: 'smooth' });
+    smoothScrollTo(rows[nextIndex]);
   });
 
 })();

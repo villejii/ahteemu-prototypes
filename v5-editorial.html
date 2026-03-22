@@ -767,6 +767,25 @@ h1, h2 {
 (function() {
   'use strict';
 
+  // ── Safari smooth scroll helper ──
+  function smoothScrollTo(element) {
+    document.documentElement.style.scrollSnapType = 'none';
+    element.scrollIntoView({ behavior: 'smooth' });
+    let scrollTimeout;
+    function onScroll() {
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => {
+        document.documentElement.style.scrollSnapType = '';
+        window.removeEventListener('scroll', onScroll);
+      }, 100);
+    }
+    window.addEventListener('scroll', onScroll);
+    setTimeout(() => {
+      document.documentElement.style.scrollSnapType = '';
+      window.removeEventListener('scroll', onScroll);
+    }, 1500);
+  }
+
   // ── Section IDs in order ──
   const sectionIds = ['logo', 'juontaja', 'ilmailu', 'hevoset', 'referenssit', 'kumppanit', 'footer'];
   const sections = sectionIds.map(id => document.getElementById(id));
@@ -823,7 +842,7 @@ h1, h2 {
     dot.addEventListener('click', (e) => {
       e.stopPropagation();
       const target = document.getElementById(dot.dataset.target);
-      if (target) target.scrollIntoView({ behavior: 'smooth' });
+      if (target) smoothScrollTo(target);
     });
   });
 
@@ -833,7 +852,7 @@ h1, h2 {
       // Don't advance if clicking a link, button, or partner logo
       if (e.target.closest('a, button')) return;
       const next = sections[idx + 1];
-      if (next) next.scrollIntoView({ behavior: 'smooth' });
+      if (next) smoothScrollTo(next);
     });
   });
 
@@ -844,13 +863,13 @@ h1, h2 {
       e.preventDefault();
       if (currentSection < sections.length - 1) {
         currentSection++;
-        sections[currentSection].scrollIntoView({ behavior: 'smooth' });
+        smoothScrollTo(sections[currentSection]);
       }
     } else if (e.key === 'ArrowUp') {
       e.preventDefault();
       if (currentSection > 0) {
         currentSection--;
-        sections[currentSection].scrollIntoView({ behavior: 'smooth' });
+        smoothScrollTo(sections[currentSection]);
       }
     }
   });

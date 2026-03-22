@@ -677,6 +677,25 @@ h2 {
 (function() {
   'use strict';
 
+  // ── Safari smooth scroll helper ──
+  function smoothScrollTo(element) {
+    document.documentElement.style.scrollSnapType = 'none';
+    element.scrollIntoView({ behavior: 'smooth' });
+    let scrollTimeout;
+    function onScroll() {
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => {
+        document.documentElement.style.scrollSnapType = '';
+        window.removeEventListener('scroll', onScroll);
+      }, 100);
+    }
+    window.addEventListener('scroll', onScroll);
+    setTimeout(() => {
+      document.documentElement.style.scrollSnapType = '';
+      window.removeEventListener('scroll', onScroll);
+    }, 1500);
+  }
+
   const sections = document.querySelectorAll('.section');
   const navDots = document.querySelectorAll('.nav-dot');
   let currentIndex = 0;
@@ -788,7 +807,7 @@ h2 {
     dot.addEventListener('click', (e) => {
       e.stopPropagation();
       const idx = parseInt(dot.dataset.index);
-      sections[idx].scrollIntoView({ behavior: 'smooth' });
+      smoothScrollTo(sections[idx]);
     });
   });
 
@@ -797,7 +816,7 @@ h2 {
     if (e.target.closest('.nav-dots') || e.target.closest('a')) return;
     const next = Math.min(currentIndex + 1, sections.length - 1);
     if (next !== currentIndex) {
-      sections[next].scrollIntoView({ behavior: 'smooth' });
+      smoothScrollTo(sections[next]);
     }
   });
 
@@ -818,7 +837,7 @@ h2 {
       next = sections.length - 1;
     }
     if (next !== currentIndex) {
-      sections[next].scrollIntoView({ behavior: 'smooth' });
+      smoothScrollTo(sections[next]);
     }
   });
 

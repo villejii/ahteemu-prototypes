@@ -487,6 +487,25 @@ body {
 (function() {
   'use strict';
 
+  // ── Safari smooth scroll helper ──
+  function smoothScrollTo(element) {
+    document.documentElement.style.scrollSnapType = 'none';
+    element.scrollIntoView({ behavior: 'smooth' });
+    let scrollTimeout;
+    function onScroll() {
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => {
+        document.documentElement.style.scrollSnapType = '';
+        window.removeEventListener('scroll', onScroll);
+      }, 100);
+    }
+    window.addEventListener('scroll', onScroll);
+    setTimeout(() => {
+      document.documentElement.style.scrollSnapType = '';
+      window.removeEventListener('scroll', onScroll);
+    }, 1500);
+  }
+
   const sections = document.querySelectorAll('.section');
   const counter = document.getElementById('sectionCounter');
   const totalSections = sections.length;
@@ -529,7 +548,7 @@ body {
     isScrolling = true;
     currentIndex = index;
     updateCounter(currentIndex);
-    sections[index].scrollIntoView({ behavior: 'smooth' });
+    smoothScrollTo(sections[index]);
     setTimeout(() => { isScrolling = false; }, 800);
   }
 

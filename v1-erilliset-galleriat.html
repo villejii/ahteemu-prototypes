@@ -766,6 +766,25 @@
     </section>
 
     <script>
+        // ===== SAFARI SMOOTH SCROLL HELPER =====
+        function smoothScrollTo(element) {
+          document.documentElement.style.scrollSnapType = 'none';
+          element.scrollIntoView({ behavior: 'smooth' });
+          let scrollTimeout;
+          function onScroll() {
+            clearTimeout(scrollTimeout);
+            scrollTimeout = setTimeout(() => {
+              document.documentElement.style.scrollSnapType = '';
+              window.removeEventListener('scroll', onScroll);
+            }, 100);
+          }
+          window.addEventListener('scroll', onScroll);
+          setTimeout(() => {
+            document.documentElement.style.scrollSnapType = '';
+            window.removeEventListener('scroll', onScroll);
+          }, 1500);
+        }
+
         // ===== CLICK-TO-ADVANCE NAVIGATION =====
         document.querySelectorAll('.card[data-next]').forEach(card => {
             // Arrow click
@@ -774,7 +793,7 @@
                 arrow.addEventListener('click', (e) => {
                     e.stopPropagation();
                     const next = document.getElementById(card.dataset.next);
-                    if (next) next.scrollIntoView({ behavior: 'smooth' });
+                    if (next) smoothScrollTo(next);
                 });
             }
 
@@ -782,7 +801,7 @@
             if (card.classList.contains('card-logo')) {
                 card.addEventListener('click', () => {
                     const next = document.getElementById(card.dataset.next);
-                    if (next) next.scrollIntoView({ behavior: 'smooth' });
+                    if (next) smoothScrollTo(next);
                 });
             }
         });
@@ -877,7 +896,7 @@
         dots.forEach(dot => {
             dot.addEventListener('click', () => {
                 const target = document.getElementById(dot.dataset.target);
-                if (target) target.scrollIntoView({ behavior: 'smooth' });
+                if (target) smoothScrollTo(target);
             });
         });
     </script>

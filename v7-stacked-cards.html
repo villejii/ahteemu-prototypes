@@ -412,6 +412,9 @@ p {
   .card-wrapper {
     height: auto !important;
   }
+  html {
+    scroll-snap-type: y mandatory;
+  }
   .card {
     position: relative !important;
     top: auto !important;
@@ -420,9 +423,6 @@ p {
     min-height: 100dvh;
     box-shadow: none;
     scroll-snap-align: start;
-  }
-  body {
-    scroll-snap-type: y mandatory;
   }
   .card .content {
     padding: 4rem 1.5rem;
@@ -603,14 +603,31 @@ p {
   const dots = document.querySelectorAll('.nav-dot');
   const totalCards = cards.length;
   let currentCard = 0;
-  let isScrolling = false;
+
+  // ── Safari smooth scroll helper ──
+  function smoothScrollToPos(top) {
+    document.documentElement.style.scrollSnapType = 'none';
+    window.scrollTo({ top: top, behavior: 'smooth' });
+    let t;
+    function onScroll() {
+      clearTimeout(t);
+      t = setTimeout(() => {
+        document.documentElement.style.scrollSnapType = '';
+        window.removeEventListener('scroll', onScroll);
+      }, 100);
+    }
+    window.addEventListener('scroll', onScroll);
+    setTimeout(() => {
+      document.documentElement.style.scrollSnapType = '';
+      window.removeEventListener('scroll', onScroll);
+    }, 1500);
+  }
 
   // ── Scroll to card ──
   function scrollToCard(index) {
     if (index < 0 || index >= totalCards) return;
     const wrapper = wrappers[index];
-    const top = wrapper.offsetTop;
-    window.scrollTo({ top: top, behavior: 'smooth' });
+    smoothScrollToPos(wrapper.offsetTop);
   }
   window.scrollToCard = scrollToCard;
 
@@ -761,7 +778,7 @@ p {
     // Only snap if not already at the right position (tolerance 5px)
     const targetTop = wrappers[closestIndex].offsetTop;
     if (Math.abs(scrollY - targetTop) > 5) {
-      window.scrollTo({ top: targetTop, behavior: 'smooth' });
+      smoothScrollToPos(targetTop);
     }
   }
 

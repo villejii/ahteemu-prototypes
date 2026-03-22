@@ -623,6 +623,25 @@ p.body-text {
 (function() {
   'use strict';
 
+  // ── Safari smooth scroll helper ──
+  function smoothScrollTo(element) {
+    document.documentElement.style.scrollSnapType = 'none';
+    element.scrollIntoView({ behavior: 'smooth' });
+    let scrollTimeout;
+    function onScroll() {
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => {
+        document.documentElement.style.scrollSnapType = '';
+        window.removeEventListener('scroll', onScroll);
+      }, 100);
+    }
+    window.addEventListener('scroll', onScroll);
+    setTimeout(() => {
+      document.documentElement.style.scrollSnapType = '';
+      window.removeEventListener('scroll', onScroll);
+    }, 1500);
+  }
+
   const sections = document.querySelectorAll('.section');
   const navDots = document.querySelectorAll('.nav-dot');
   let currentIndex = 0;
@@ -683,7 +702,7 @@ p.body-text {
   navDots.forEach(dot => {
     dot.addEventListener('click', () => {
       const idx = parseInt(dot.dataset.index);
-      sections[idx]?.scrollIntoView({ behavior: 'smooth' });
+      if (sections[idx]) smoothScrollTo(sections[idx]);
     });
   });
 
@@ -692,7 +711,7 @@ p.body-text {
     if (e.target.closest('.nav-dots') || e.target.closest('a') || e.target.closest('button')) return;
     const next = Math.min(currentIndex + 1, sections.length - 1);
     if (next !== currentIndex) {
-      sections[next].scrollIntoView({ behavior: 'smooth' });
+      smoothScrollTo(sections[next]);
     }
   });
 
@@ -709,7 +728,7 @@ p.body-text {
     }
     if (target !== null && target !== currentIndex) {
       isScrolling = true;
-      sections[target].scrollIntoView({ behavior: 'smooth' });
+      smoothScrollTo(sections[target]);
       setTimeout(() => { isScrolling = false; }, 900);
     }
   });

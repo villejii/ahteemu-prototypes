@@ -711,6 +711,25 @@ a {
 
 <script>
 (function() {
+  // ── Safari smooth scroll helper (mobile vertical snap) ──
+  function smoothScrollTo(element) {
+    document.documentElement.style.scrollSnapType = 'none';
+    element.scrollIntoView({ behavior: 'smooth' });
+    let scrollTimeout;
+    function onScroll() {
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => {
+        document.documentElement.style.scrollSnapType = '';
+        window.removeEventListener('scroll', onScroll);
+      }, 100);
+    }
+    window.addEventListener('scroll', onScroll);
+    setTimeout(() => {
+      document.documentElement.style.scrollSnapType = '';
+      window.removeEventListener('scroll', onScroll);
+    }, 1500);
+  }
+
   const container = document.getElementById('scrollContainer');
   const panels = document.querySelectorAll('.panel');
   const progressBar = document.getElementById('progressBar');
@@ -734,7 +753,7 @@ a {
       if (i < panels.length - 1) {
         const next = panels[i + 1];
         if (isMobile()) {
-          next.scrollIntoView({ behavior: 'smooth' });
+          smoothScrollTo(next);
         } else {
           container.scrollTo({ left: next.offsetLeft, behavior: 'smooth' });
         }
@@ -762,7 +781,7 @@ a {
       e.preventDefault();
       const idx = parseInt(this.dataset.nav);
       if (isMobile()) {
-        panels[idx].scrollIntoView({ behavior: 'smooth' });
+        smoothScrollTo(panels[idx]);
       } else {
         container.scrollTo({ left: panels[idx].offsetLeft, behavior: 'smooth' });
       }
@@ -774,7 +793,7 @@ a {
     dot.addEventListener('click', function() {
       const idx = parseInt(this.dataset.index);
       if (isMobile()) {
-        panels[idx].scrollIntoView({ behavior: 'smooth' });
+        smoothScrollTo(panels[idx]);
       } else {
         container.scrollTo({ left: panels[idx].offsetLeft, behavior: 'smooth' });
       }
