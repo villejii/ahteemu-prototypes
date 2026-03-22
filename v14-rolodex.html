@@ -450,12 +450,19 @@ body {
    ══════════════════════════════════ */
 @media (max-width: 767px) {
   /* Switch to vertical scroll with portrait cards */
-  body {
-    overflow: auto;
+  html, body {
+    overflow: visible;
+    overflow-x: hidden;
     height: auto;
-    align-items: stretch;
+  }
+
+  html {
+    scroll-snap-type: y mandatory;
+  }
+
+  body {
+    display: block;
     padding: 1rem;
-    gap: 1rem;
   }
 
   .deck {
@@ -474,14 +481,14 @@ body {
     opacity: 1 !important;
     width: 100%;
     height: auto;
-    min-height: 85vh;
+    min-height: 90vh;
+    min-height: 90dvh;
     border-radius: 16px;
     box-shadow: 0 8px 30px rgba(0,0,0,0.3);
     scroll-snap-align: start;
-  }
-
-  html {
-    scroll-snap-type: y mandatory;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .nav-arrow { display: none; }
@@ -729,9 +736,11 @@ body {
     }
   });
 
-  // ── Wheel navigation (debounced) ──
+  // ── Wheel navigation (debounced, desktop only) ──
+  const isMobile = () => window.innerWidth < 768;
   let wheelCooldown = false;
   document.addEventListener('wheel', (e) => {
+    if (isMobile()) return; // let native scroll handle mobile
     e.preventDefault();
     if (wheelCooldown) return;
     wheelCooldown = true;
