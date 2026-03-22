@@ -21,9 +21,13 @@
   --panel-count: 7;
 }
 
-html, body {
+html {
   height: 100%;
   overflow: hidden;
+}
+
+body {
+  height: 100%;
   font-family: 'Montserrat', sans-serif;
   font-weight: 300;
   color: var(--dark);
@@ -450,17 +454,21 @@ a {
    MOBILE — VERTICAL FALLBACK
    ══════════════════════════════════════ */
 @media (max-width: 767px) {
-  html, body {
-    overflow: auto;
+  html {
+    overflow: visible;
+    overflow-x: hidden;
+    height: auto;
+    scroll-snap-type: y mandatory;
+  }
+  body {
+    overflow: visible;
     height: auto;
   }
   .scroll-container {
     flex-direction: column;
     width: 100vw;
     height: auto;
-    overflow-x: hidden;
-    overflow-y: visible;
-    scroll-snap-type: y mandatory;
+    overflow: visible;
   }
   .panel {
     flex: 0 0 100vh;
